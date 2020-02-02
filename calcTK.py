@@ -19,53 +19,57 @@ class Calculator:
         self.eqFont = font.Font(weight="bold", size=13)
 
         # create screen widget
-        self.screen = Text(master, state="disabled", width=20, height=1,
+        self.screen = Text(master, state="disabled", width=19, height=1,
                            background="#D73F09", foreground="black",
-                           font=self.screenFont)
+                           font=self.screenFont, pady=10)
 
         # position screen in window
-        self.screen.grid(row=0, column=0, columnspan=6, pady=20)
+        self.screen.grid(row=0, column=0, columnspan=4, padx=1, pady=20)
 
         # initialize screen value as empty
         self.equation = ""
 
-        # first row buttons---------------
+        # first row buttons-----------------------------------------------------
         b1 = self.createButton(u"clear", None)
         b2 = self.createButton('%')
         b3 = self.createButton(u"\u232B", None)  # not working yet
         b4 = self.createButton("/")
-        # b5 = None  # place holder for button
 
-        # 2nd row buttons---------------
-        b6 = self.createButton(7)
-        b7 = self.createButton(8)
-        b8 = self.createButton(9)
-        b9 = self.createButton("*")
-        #b10 = self.createButton("RUN", None)
-        #b10 = None
+        # 2nd row buttons-------------------------------------------------------
+        b5 = self.createButton(7)
+        b6 = self.createButton(8)
+        b7 = self.createButton(9)
+        b8 = self.createButton("*")
 
-        # 3rd row buttons---------------
-        b11 = self.createButton(4)
-        b12 = self.createButton(5)
-        b13 = self.createButton(6)
-        b14 = self.createButton("-")
-        # b15 = None  # place holder for button
+        # 3rd row buttons-------------------------------------------------------
+        b9 = self.createButton(4)
+        b10 = self.createButton(5)
+        b11 = self.createButton(6)
+        b12 = self.createButton("-")
 
-        # 4th row buttons---------------
-        b16 = self.createButton(1)
-        b17 = self.createButton(2)
-        b18 = self.createButton(3)
-        b19 = self.createButton("+")
-        # b20 = None  # place holder for button
+        # 4th row buttons-------------------------------------------------------
+        b13 = self.createButton(1)
+        b14 = self.createButton(2)
+        b15 = self.createButton(3)
+        b16 = self.createButton("+")
 
-        # 5th row button---------------
-        b21 = self.createButton(".")
-        b22 = self.createButton(0)
-        b23 = self.createButton("<", None)
-        b24 = self.createButton("=", None)
-        #b25 = None
+        # 5th row button--------------------------------------------------------
+        b17 = self.createButton(".")
+        b18 = self.createButton(0)
+        b19 = self.createButton("<", None)
+        b20 = self.createButton("=", None)
 
-        # 6th row calculator function ----------------
+        # Grid box for main 20 buttons------------------------------------------
+        buttons = [b1, b2, b3, b4, b5, b6, b7, b8, b9, b10,
+                   b11, b12, b13, b14, b15, b16, b17, b18, b19, b20]
+        count = 0
+        for row in range(1, 6):
+            for column in range(4):
+                if buttons[count] is not None:
+                    buttons[count].grid(row=row, column=column)
+                count += 1
+
+        # 6th row calculator function ------------------------------------------
         Label(self.master, text="Function:",
               font=self.eqFont).grid(row=7)
         # Dropdown menu first row
@@ -75,38 +79,24 @@ class Calculator:
         variable.set(self.options[0])  # default value
         b26 = OptionMenu(master, variable, *self.options)
         b26.config(font=self.eqFont)
+        b26.grid(row=7, column=1)
 
-        # 7th row keyboard input ---------------
+        # 7th row keyboard input -----------------------------------------------
         Label(self.master, text="Keyboard Input:",
               font=self.eqFont).grid(row=8)
 
-        # use self in order to access within click function
+        # create keyboard input box and place on grid
         self.b27 = Entry(self.master, width=28, textvariable=self.equation)
+        self.b27.grid(row=8, column=0, columnspan=5,
+                      padx=1, pady=3)
 
-        # create calc button to execute keyboard input
+        # create ENTER button and place on grid
         b28 = Button(self.master, text="ENTER", command=lambda:
                      self.click("ENTER", None), font=self.myFont,
                      height=2, padx=5, pady=1,)
-
-        # store buttons in list
-        buttons = [b1, b2, b3, b4, b6, b7, b8, b9, b11, b12,
-                   b13, b14, b16, b17, b18, b19, b21, b22, b23, b24]
-
-        # arrange buttons with grid manager
-        count = 0
-        for row in range(1, 6):
-            for column in range(4):
-                if buttons[count] is not None:
-                    buttons[count].grid(row=row, column=column)
-                count += 1
-
-        b26.grid(row=7, column=1)
-
-        # keyboard input grid and calc button
-        self.b27.grid(row=8, column=0, columnspan=5,
-                      padx=1, pady=3)
         b28.grid(row=8, column=3)
 
+    # functions ----------------------------------------------------------------
     def createButton(self, val, write=True, width=10):
         # this function creates a button
         return Button(self.master, text=val, command=lambda:
@@ -162,7 +152,7 @@ class Calculator:
 
 
 root = Tk()
-root.geometry("600x450")
+root.geometry("606x455")
 root.resizable(0, 0)
 Calculator(root)
 root.mainloop()

@@ -71,7 +71,7 @@ class Calculator:
         b24 = self.createButton("=", None)
         b25 = None  # place holder for button
 
-        # keyboard input ->still needs get function
+        # keyboard input -
         Label(self.master, text="Keyboard Input:",
               font=self.eqFont).grid(row=7)
         self.b26 = Entry(self.master, width=34, textvariable=self.equation)
@@ -106,9 +106,10 @@ class Calculator:
         # this function handles what happens when you click a button
         # 'write' argument if True means the value 'val' should be written on
         # screen, if None, should not be written on screen
-
         if write == None:
+            # get input from keyboard input box
             kbInput = self.b26.get()
+
             # only evaluate code when there is an equation to be evaluated
             if text == "=" and self.equation:
                 print(self.equation)
@@ -116,13 +117,18 @@ class Calculator:
                 self.clear_screen()
                 self.insert_screen(answer, newline=True)
 
+            # calculates input from keyboard input box
             elif text == "CALC":
                 print(kbInput)
                 answer = str(eval(kbInput))
                 self.clear_screen()
                 self.insert_screen(answer, newline=True)
+
+            # backspace
             elif text == u'\u232b':  # this needs to backspace not clear
                 self.clear_screen()
+
+            # clear screen
             elif text == "clear":
                 self.clear_screen()
 

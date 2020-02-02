@@ -21,82 +21,93 @@ class Calculator:
         # create screen widget
         self.screen = Text(master, state="disabled", width=20, height=1,
                            background="#D73F09", foreground="black",
-                           font=self.screenFont,)
+                           font=self.screenFont)
 
         # position screen in window
-        self.screen.grid(row=0, column=0, columnspan=6, padx=0, pady=20)
+        self.screen.grid(row=0, column=0, columnspan=6, pady=20)
 
         # initialize screen value as empty
         self.equation = ""
 
-        # first row buttons
+        # first row buttons---------------
         b1 = self.createButton(u"clear", None)
         b2 = self.createButton('%')
         b3 = self.createButton(u"\u232B", None)  # not working yet
         b4 = self.createButton("/")
+        # b5 = None  # place holder for button
 
-        # Dropdown menu first row
-        self.options = ["Save History", "Save to File",
-                        "Calculation Log", "Hamming Code"]
-        variable = StringVar(master)
-        variable.set(self.options[0])  # default value
-        b5 = OptionMenu(master, variable, *self.options)
-        b5.config(font=self.myFont)
-
-        # 2nd row buttons
+        # 2nd row buttons---------------
         b6 = self.createButton(7)
         b7 = self.createButton(8)
         b8 = self.createButton(9)
         b9 = self.createButton("*")
-        b10 = self.createButton("RUN", None)
+        #b10 = self.createButton("RUN", None)
+        #b10 = None
 
-        # 3rd row buttons
+        # 3rd row buttons---------------
         b11 = self.createButton(4)
         b12 = self.createButton(5)
         b13 = self.createButton(6)
         b14 = self.createButton("-")
-        b15 = None  # place holder for button
+        # b15 = None  # place holder for button
 
-        # 4th row buttons
+        # 4th row buttons---------------
         b16 = self.createButton(1)
         b17 = self.createButton(2)
         b18 = self.createButton(3)
         b19 = self.createButton("+")
-        b20 = None  # place holder for button
+        # b20 = None  # place holder for button
 
-        # 5th row buttonw
+        # 5th row button---------------
         b21 = self.createButton(".")
         b22 = self.createButton(0)
         b23 = self.createButton("<", None)
         b24 = self.createButton("=", None)
-        b25 = None  # place holder for button
+        #b25 = None
 
-        # keyboard input -
-        Label(self.master, text="Keyboard Input:",
+        # 6th row calculator function ----------------
+        Label(self.master, text="Function:",
               font=self.eqFont).grid(row=7)
-        self.b26 = Entry(self.master, width=34, textvariable=self.equation)
+        # Dropdown menu first row
+        self.options = ["Basic Calc", "Save History", "Save to File",
+                        "Calculation Log", "Hamming Code"]
+        variable = StringVar(master)
+        variable.set(self.options[0])  # default value
+        b26 = OptionMenu(master, variable, *self.options)
+        b26.config(font=self.eqFont)
 
-        b27 = Button(self.master, text="CALC", command=lambda:
-                     self.click("CALC", None), font=self.myFont,
+        # 7th row keyboard input ---------------
+        Label(self.master, text="Keyboard Input:",
+              font=self.eqFont).grid(row=8)
+
+        # use self in order to access within click function
+        self.b27 = Entry(self.master, width=28, textvariable=self.equation)
+
+        # create calc button to execute keyboard input
+        b28 = Button(self.master, text="ENTER", command=lambda:
+                     self.click("ENTER", None), font=self.myFont,
                      height=2, padx=5, pady=1,)
 
         # store buttons in list
-        buttons = [b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12,
-                   b13, b14, b15, b16, b17, b18, b19, b20, b21, b22, b23, b24, b25]
+        buttons = [b1, b2, b3, b4, b6, b7, b8, b9, b11, b12,
+                   b13, b14, b16, b17, b18, b19, b21, b22, b23, b24]
 
         # arrange buttons with grid manager
         count = 0
         for row in range(1, 6):
-            for column in range(5):
+            for column in range(4):
                 if buttons[count] is not None:
                     buttons[count].grid(row=row, column=column)
                 count += 1
 
-        self.b26.grid(row=7, column=0, columnspan=5,
-                      padx=1, pady=3)
-        b27.grid(row=7, column=4)
+        b26.grid(row=7, column=1)
 
-    def createButton(self, val, write=True, width=8):
+        # keyboard input grid and calc button
+        self.b27.grid(row=8, column=0, columnspan=5,
+                      padx=1, pady=3)
+        b28.grid(row=8, column=3)
+
+    def createButton(self, val, write=True, width=10):
         # this function creates a button
         return Button(self.master, text=val, command=lambda:
                       self.click(val, write), width=width, font=self.myFont,
@@ -108,7 +119,7 @@ class Calculator:
         # screen, if None, should not be written on screen
         if write == None:
             # get input from keyboard input box
-            kbInput = self.b26.get()
+            kbInput = self.b27.get()
 
             # only evaluate code when there is an equation to be evaluated
             if text == "=" and self.equation:
@@ -118,7 +129,7 @@ class Calculator:
                 self.insert_screen(answer, newline=True)
 
             # calculates input from keyboard input box
-            elif text == "CALC":
+            elif text == "ENTER":
                 print(kbInput)
                 answer = str(eval(kbInput))
                 self.clear_screen()
@@ -151,7 +162,7 @@ class Calculator:
 
 
 root = Tk()
-root.geometry("660x400")
+root.geometry("600x450")
 root.resizable(0, 0)
 Calculator(root)
 root.mainloop()

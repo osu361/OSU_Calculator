@@ -15,6 +15,9 @@ class Calculator:
         # button font
         self.myFont = font.Font(weight="bold", size=20)
 
+        # button font
+        self.eqFont = font.Font(weight="bold", size=13)
+
         # create screen widget
         self.screen = Text(master, state="disabled", width=20, height=1,
                            background="#FF7F50", foreground="black",
@@ -45,7 +48,7 @@ class Calculator:
         b7 = self.createButton(8)
         b8 = self.createButton(9)
         b9 = self.createButton("*")
-        b10 = self.createButton("Enter", None)
+        b10 = self.createButton("RUN", None)
 
         # 3rd row buttons
         b11 = self.createButton(4)
@@ -68,6 +71,15 @@ class Calculator:
         b24 = self.createButton("=", None)
         b25 = None  # place holder for button
 
+        # keyboard input ->still needs get function
+        Label(self.master, text="Keyboard Input:",
+              font=self.eqFont).grid(row=7)
+        self.b26 = Entry(self.master, width=34, textvariable=self.equation)
+
+        b27 = Button(self.master, text="CALC", command=lambda:
+                     self.click("CALC", None), font=self.myFont,
+                     height=2, padx=5, pady=1,)
+
         # store buttons in list
         buttons = [b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12,
                    b13, b14, b15, b16, b17, b18, b19, b20, b21, b22, b23, b24, b25]
@@ -80,18 +92,23 @@ class Calculator:
                     buttons[count].grid(row=row, column=column)
                 count += 1
 
+        self.b26.grid(row=7, column=0, columnspan=5,
+                      padx=1, pady=3)
+        b27.grid(row=7, column=4)
+
     def createButton(self, val, write=True, width=8):
         # this function creates a button
         return Button(self.master, text=val, command=lambda:
                       self.click(val, write), width=width, font=self.myFont,
-                      height=2, padx=1, pady=1,)
+                      height=2, padx=5, pady=1,)
 
     def click(self, text, write):
         # this function handles what happens when you click a button
         # 'write' argument if True means the value 'val' should be written on
         # screen, if None, should not be written on screen
-        if write == None:
 
+        if write == None:
+            kbInput = self.b26.get()
             # only evaluate code when there is an equation to be evaluated
             if text == "=" and self.equation:
                 print(self.equation)
@@ -99,6 +116,11 @@ class Calculator:
                 self.clear_screen()
                 self.insert_screen(answer, newline=True)
 
+            elif text == "CALC":
+                print(kbInput)
+                answer = str(eval(kbInput))
+                self.clear_screen()
+                self.insert_screen(answer, newline=True)
             elif text == u'\u232b':  # this needs to backspace not clear
                 self.clear_screen()
             elif text == "clear":
@@ -123,7 +145,7 @@ class Calculator:
 
 
 root = Tk()
-root.geometry("624x400")
+root.geometry("660x400")
 root.resizable(0, 0)
 Calculator(root)
 root.mainloop()

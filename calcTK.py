@@ -20,11 +20,11 @@ class Calculator:
 
         # create screen widget
         self.screen = Text(master, state="disabled", width=20, height=1,
-                           background="#FF7F50", foreground="black",
+                           background="#D73F09", foreground="black",
                            font=self.screenFont,)
 
         # position screen in window
-        self.screen.grid(row=0, column=0, columnspan=6, padx=10, pady=20)
+        self.screen.grid(row=0, column=0, columnspan=6, padx=0, pady=20)
 
         # initialize screen value as empty
         self.equation = ""

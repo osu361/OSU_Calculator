@@ -30,7 +30,7 @@ class Calculator:
         self.equation = ""
 
         # first row buttons-----------------------------------------------------
-        b1 = self.createButton(u"clear", None)
+        b1 = self.createButton(u"CLEAR", None)
         b2 = self.createButton('%')
         b3 = self.createButton(u"\u232B", None)  # not working yet
         b4 = self.createButton("/")
@@ -130,7 +130,7 @@ class Calculator:
                 self.clear_screen()
 
             # clear screen
-            elif text == "clear":
+            elif text == "CLEAR":
                 self.clear_screen()
 
         else:

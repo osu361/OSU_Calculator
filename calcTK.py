@@ -143,7 +143,7 @@ class Calculator:
 
 # --------------------------------main-------------------------------------------
 root = Tk()
-root.geometry("606x455")
-root.resizable(0, 0)
+root.geometry("606x455")  # set window size
+root.resizable(0, 0)  # keeps window the same size
 Calculator(root)
 root.mainloop()

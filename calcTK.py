@@ -63,8 +63,7 @@ class Calculator:
 
         # -----------------dropdown menu and keyboard input----------------------
         # 6th row dropdown menu
-        Label(self.master, text="Function:",
-              font=self.eqFont).grid(row=7)
+        Label(self.master, text="Function:", font=self.eqFont).grid(row=7)
         self.options = ["Basic Calc", "Save History", "Save to File",
                         "Calculation Log", "Hamming Code"]
         variable = StringVar(master)
@@ -74,8 +73,7 @@ class Calculator:
         b26.grid(row=7, column=1)
 
         # 7th row keyboard input
-        Label(self.master, text="Keyboard Input:",
-              font=self.eqFont).grid(row=8)
+        Label(self.master, text="Keyboard Input:" font=self.eqFont).grid(row=8)
 
         # create keyboard input box and place on grid
         self.b27 = Entry(self.master, width=28, textvariable=self.equation)
@@ -87,7 +85,7 @@ class Calculator:
                      height=2, padx=5, pady=1,)
         b28.grid(row=8, column=3)
 
-    # ----------------------------functions -------------------------------------
+    # ----------------------------functions ------------------------------------
 
     # this functions creates a button for them main grid buttons
     def createButton(self, val, write=True, width=10):
@@ -143,6 +141,7 @@ class Calculator:
         self.screen.configure(state="disabled")
 
 
+# --------------------------------main-------------------------------------------
 root = Tk()
 root.geometry("606x455")
 root.resizable(0, 0)

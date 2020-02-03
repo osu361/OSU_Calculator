@@ -13,15 +13,15 @@ class Calculator:
         self.screenFont = font.Font(weight="bold", size=40)
 
         # button font 20
-        self.myFont = font.Font(weight="bold", size=20)
+        self.myFont = font.Font(weight="bold", size=16)
 
         # button font 13
-        self.eqFont = font.Font(weight="bold", size=13)
+        self.eqFont = font.Font(weight="bold", size=11)
 
         # create screen widget
         self.screen = Text(master, state="disabled", width=19, height=1,
                            background="#D73F09", foreground="black",
-                           font=self.screenFont, pady=10)
+                           font=self.screenFont, pady=2)
 
         # position screen in window
         # make grid spaces dynamic in size
@@ -88,12 +88,12 @@ class Calculator:
         self.kbInput = Entry(self.master, width=26,
                              textvariable=self.equation, font=self.myFont)
         self.kbInput.grid(row=8, column=0, columnspan=5,
-                          padx=1, pady=3, sticky=(N, S, E, W))
+                          padx=1, pady=1, sticky=(N, S, E, W))
 
         # create ENTER button and place on grid
         entButton = Button(self.master, text="ENTER", command=lambda:
                            self.click("ENTER", None), font=self.myFont,
-                           height=2, padx=5, pady=1,)
+                           height=1, padx=5, pady=1,)
         entButton.grid(row=8, column=3, sticky=(N, S, E, W))
 
     # ----------------------------functions ------------------------------------
@@ -104,7 +104,7 @@ class Calculator:
         # click reads string assigned to button and uses eval to solve equation
         return Button(self.master, text=val, command=lambda:
                       self.click(val, write), width=width, font=self.myFont,
-                      height=2, padx=5, pady=1,)
+                      padx=5, pady=1,)
 
     # this function handles what happens when you click a button
     def click(self, text, write):
@@ -152,6 +152,6 @@ class Calculator:
 
 # --------------------------------main-------------------------------------------
 root = Tk()
-root.geometry("320x455")  # set window size
+root.geometry("320x550")  # set window size
 Calculator(root)
 root.mainloop()

@@ -8,6 +8,7 @@ class Calculator:
 
         self.master = master
         master.title("OSU Calculator")
+        frame = Frame(master)
 
         # screen font
         self.screenFont = font.Font(weight="bold", size=40)
@@ -24,7 +25,18 @@ class Calculator:
                            font=self.screenFont, pady=10)
 
         # position screen in window
-        self.screen.grid(row=0, column=0, columnspan=4, padx=1, pady=20)
+        for i in range(8):
+            Grid.rowconfigure(root, i, weight=1)
+
+        for i in range(4):
+            Grid.columnconfigure(root, i, weight=1)
+
+        self.screen.grid(row=0, column=0, columnspan=4,
+                         padx=1, pady=20, sticky=N+S+E+W)
+        grid = Frame(frame)
+        grid.grid(sticky=N+S+E+W, column=0, row=7, columnspan=2)
+        Grid.rowconfigure(frame, 7, weight=1)
+        Grid.columnconfigure(frame, 0, weight=1)
 
         # initialize screen value as empty
         self.equation = ""
@@ -32,59 +44,64 @@ class Calculator:
         # ------------------------main buttons (20)------------------------------
 
         # 1st row buttons
-        b1 = self.createButton(u"CLEAR", None).grid(row=1, column=0)
-        b2 = self.createButton('%').grid(row=1, column=1)
-        b3 = self.createButton(u"\u232B", None).grid(row=1, column=2)
-        b4 = self.createButton("/").grid(row=1, column=3)
+        b1 = self.createButton(u"CLEAR", None).grid(
+            row=1, column=0, sticky=(N, S, E, W))
+        b2 = self.createButton('%').grid(row=1, column=1, sticky=(N, S, E, W))
+        b3 = self.createButton(u"\u232B", None).grid(
+            row=1, column=2, sticky=(N, S, E, W))
+        b4 = self.createButton("/").grid(row=1, column=3, sticky=(N, S, E, W))
 
         # 2nd row buttons
-        b5 = self.createButton(7).grid(row=2, column=0)
-        b6 = self.createButton(8).grid(row=2, column=1)
-        b7 = self.createButton(9).grid(row=2, column=2)
-        b8 = self.createButton("*").grid(row=2, column=3)
+        b5 = self.createButton(7).grid(row=2, column=0, sticky=(N, S, E, W))
+        b6 = self.createButton(8).grid(row=2, column=1, sticky=(N, S, E, W))
+        b7 = self.createButton(9).grid(row=2, column=2, sticky=(N, S, E, W))
+        b8 = self.createButton("*").grid(row=2, column=3, sticky=(N, S, E, W))
 
         # 3rd row buttons
-        b9 = self.createButton(4).grid(row=3, column=0)
-        b10 = self.createButton(5).grid(row=3, column=1)
-        b11 = self.createButton(6).grid(row=3, column=2)
-        b12 = self.createButton("-").grid(row=3, column=3)
+        b9 = self.createButton(4).grid(row=3, column=0, sticky=(N, S, E, W))
+        b10 = self.createButton(5).grid(row=3, column=1, sticky=(N, S, E, W))
+        b11 = self.createButton(6).grid(row=3, column=2, sticky=(N, S, E, W))
+        b12 = self.createButton("-").grid(row=3, column=3, sticky=(N, S, E, W))
 
         # 4th row buttons
-        b13 = self.createButton(1).grid(row=4, column=0)
-        b14 = self.createButton(2).grid(row=4, column=1)
-        b15 = self.createButton(3).grid(row=4, column=2)
-        b16 = self.createButton("+").grid(row=4, column=3)
+        b13 = self.createButton(1).grid(row=4, column=0, sticky=(N, S, E, W))
+        b14 = self.createButton(2).grid(row=4, column=1, sticky=(N, S, E, W))
+        b15 = self.createButton(3).grid(row=4, column=2, sticky=(N, S, E, W))
+        b16 = self.createButton("+").grid(row=4, column=3, sticky=(N, S, E, W))
 
         # 5th row button-
-        b17 = self.createButton(".").grid(row=5, column=0)
-        b18 = self.createButton(0).grid(row=5, column=1)
-        b19 = self.createButton("<", None).grid(row=5, column=2)
-        b20 = self.createButton("=", None).grid(row=5, column=3)
+        b17 = self.createButton(".").grid(row=5, column=0, sticky=(N, S, E, W))
+        b18 = self.createButton(0).grid(row=5, column=1, sticky=(N, S, E, W))
+        b19 = self.createButton("<", None).grid(
+            row=5, column=2, sticky=(N, S, E, W))
+        b20 = self.createButton("=", None).grid(
+            row=5, column=3, sticky=(N, S, E, W))
 
         # -----------------dropdown menu and keyboard input----------------------
         # 6th row dropdown menu
-        Label(self.master, text="Function:", font=self.eqFont).grid(row=7)
-        self.options = ["Basic Calc", "Save History", "Save to File",
-                        "Calculation Log", "Hamming Code"]
+        Label(self.master, text="Function:", font=self.eqFont).grid(
+            row=7)
+        self.options = ["BasicCalc", "SaveHist", "Save2File",
+                        "CalcLog", "Hamming"]
         variable = StringVar(master)
         variable.set(self.options[0])  # default value
         b26 = OptionMenu(master, variable, *self.options)
         b26.config(font=self.eqFont)
-        b26.grid(row=7, column=1)
+        b26.grid(row=7, column=1, sticky=(N, S, E, W))
 
         # 7th row keyboard input
-        Label(self.master, text="Keyboard Input:",
-              font=self.eqFont).grid(row=8)
 
         # create keyboard input box and place on grid
-        self.b27 = Entry(self.master, width=28, textvariable=self.equation)
-        self.b27.grid(row=8, column=0, columnspan=5, padx=1, pady=3)
+        self.b27 = Entry(self.master, width=26,
+                         textvariable=self.equation, font=self.myFont)
+        self.b27.grid(row=8, column=0, columnspan=5,
+                      padx=1, pady=3, sticky=(N, S, E, W))
 
         # create ENTER button and place on grid
         b28 = Button(self.master, text="ENTER", command=lambda:
                      self.click("ENTER", None), font=self.myFont,
                      height=2, padx=5, pady=1,)
-        b28.grid(row=8, column=3)
+        b28.grid(row=8, column=3, sticky=(N, S, E, W))
 
     # ----------------------------functions ------------------------------------
 
@@ -144,7 +161,7 @@ class Calculator:
 
 # --------------------------------main-------------------------------------------
 root = Tk()
-root.geometry("606x455")  # set window size
-root.resizable(0, 0)  # keeps window the same size
+root.geometry("320x455")  # set window size
+# root.resizable(0, 0)  # keeps window the same size
 Calculator(root)
 root.mainloop()

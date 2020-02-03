@@ -65,7 +65,7 @@ class Calculator:
         b15 = self.createButton(3).grid(row=4, column=2, sticky=(N, S, E, W))
         b16 = self.createButton("+").grid(row=4, column=3, sticky=(N, S, E, W))
 
-        # 5th row button
+        # 5th row buttons
         b17 = self.createButton(".").grid(row=5, column=0, sticky=(N, S, E, W))
         b18 = self.createButton(0).grid(row=5, column=1, sticky=(N, S, E, W))
         b19 = self.createButton("<", None).grid(
@@ -155,6 +155,5 @@ class Calculator:
 # --------------------------------main-------------------------------------------
 root = Tk()
 root.geometry("320x455")  # set window size
-# root.resizable(0, 0)  # keeps window the same size
 Calculator(root)
 root.mainloop()

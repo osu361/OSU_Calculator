@@ -73,7 +73,8 @@ class Calculator:
         b26.grid(row=7, column=1)
 
         # 7th row keyboard input
-        Label(self.master, text="Keyboard Input:" font=self.eqFont).grid(row=8)
+        Label(self.master, text="Keyboard Input:",
+              font=self.eqFont).grid(row=8)
 
         # create keyboard input box and place on grid
         self.b27 = Entry(self.master, width=28, textvariable=self.equation)

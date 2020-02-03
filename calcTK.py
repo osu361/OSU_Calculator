@@ -12,10 +12,10 @@ class Calculator:
         # screen font
         self.screenFont = font.Font(weight="bold", size=40)
 
-        # button font
+        # button font 20
         self.myFont = font.Font(weight="bold", size=20)
 
-        # button font
+        # button font 13
         self.eqFont = font.Font(weight="bold", size=13)
 
         # create screen widget
@@ -29,50 +29,42 @@ class Calculator:
         # initialize screen value as empty
         self.equation = ""
 
-        # first row buttons-----------------------------------------------------
-        b1 = self.createButton(u"CLEAR", None)
-        b2 = self.createButton('%')
-        b3 = self.createButton(u"\u232B", None)  # not working yet
-        b4 = self.createButton("/")
+        # ------------------------main buttons (20)------------------------------
 
-        # 2nd row buttons-------------------------------------------------------
-        b5 = self.createButton(7)
-        b6 = self.createButton(8)
-        b7 = self.createButton(9)
-        b8 = self.createButton("*")
+        # 1st row buttons
+        b1 = self.createButton(u"CLEAR", None).grid(row=1, column=0)
+        b2 = self.createButton('%').grid(row=1, column=1)
+        b3 = self.createButton(u"\u232B", None).grid(row=1, column=2)
+        b4 = self.createButton("/").grid(row=1, column=3)
 
-        # 3rd row buttons-------------------------------------------------------
-        b9 = self.createButton(4)
-        b10 = self.createButton(5)
-        b11 = self.createButton(6)
-        b12 = self.createButton("-")
+        # 2nd row buttons
+        b5 = self.createButton(7).grid(row=2, column=0)
+        b6 = self.createButton(8).grid(row=2, column=1)
+        b7 = self.createButton(9).grid(row=2, column=2)
+        b8 = self.createButton("*").grid(row=2, column=3)
 
-        # 4th row buttons-------------------------------------------------------
-        b13 = self.createButton(1)
-        b14 = self.createButton(2)
-        b15 = self.createButton(3)
-        b16 = self.createButton("+")
+        # 3rd row buttons
+        b9 = self.createButton(4).grid(row=3, column=0)
+        b10 = self.createButton(5).grid(row=3, column=1)
+        b11 = self.createButton(6).grid(row=3, column=2)
+        b12 = self.createButton("-").grid(row=3, column=3)
 
-        # 5th row button--------------------------------------------------------
-        b17 = self.createButton(".")
-        b18 = self.createButton(0)
-        b19 = self.createButton("<", None)
-        b20 = self.createButton("=", None)
+        # 4th row buttons
+        b13 = self.createButton(1).grid(row=4, column=0)
+        b14 = self.createButton(2).grid(row=4, column=1)
+        b15 = self.createButton(3).grid(row=4, column=2)
+        b16 = self.createButton("+").grid(row=4, column=3)
 
-        # Grid box for main 20 buttons------------------------------------------
-        buttons = [b1, b2, b3, b4, b5, b6, b7, b8, b9, b10,
-                   b11, b12, b13, b14, b15, b16, b17, b18, b19, b20]
-        count = 0
-        for row in range(1, 6):
-            for column in range(4):
-                if buttons[count] is not None:
-                    buttons[count].grid(row=row, column=column)
-                count += 1
+        # 5th row button-
+        b17 = self.createButton(".").grid(row=5, column=0)
+        b18 = self.createButton(0).grid(row=5, column=1)
+        b19 = self.createButton("<", None).grid(row=5, column=2)
+        b20 = self.createButton("=", None).grid(row=5, column=3)
 
-        # 6th row calculator function ------------------------------------------
+        # -----------------dropdown menu and keyboard input----------------------
+        # 6th row dropdown menu
         Label(self.master, text="Function:",
               font=self.eqFont).grid(row=7)
-        # Dropdown menu first row
         self.options = ["Basic Calc", "Save History", "Save to File",
                         "Calculation Log", "Hamming Code"]
         variable = StringVar(master)
@@ -81,14 +73,13 @@ class Calculator:
         b26.config(font=self.eqFont)
         b26.grid(row=7, column=1)
 
-        # 7th row keyboard input -----------------------------------------------
+        # 7th row keyboard input
         Label(self.master, text="Keyboard Input:",
               font=self.eqFont).grid(row=8)
 
         # create keyboard input box and place on grid
         self.b27 = Entry(self.master, width=28, textvariable=self.equation)
-        self.b27.grid(row=8, column=0, columnspan=5,
-                      padx=1, pady=3)
+        self.b27.grid(row=8, column=0, columnspan=5, padx=1, pady=3)
 
         # create ENTER button and place on grid
         b28 = Button(self.master, text="ENTER", command=lambda:
@@ -96,18 +87,20 @@ class Calculator:
                      height=2, padx=5, pady=1,)
         b28.grid(row=8, column=3)
 
-    # functions ----------------------------------------------------------------
+    # ----------------------------functions -------------------------------------
+
+    # this functions creates a button for them main grid buttons
     def createButton(self, val, write=True, width=10):
-        # this function creates a button
+
+        # click reads string assigned to button and uses eval to solve equation
         return Button(self.master, text=val, command=lambda:
                       self.click(val, write), width=width, font=self.myFont,
                       height=2, padx=5, pady=1,)
 
+    # this function handles what happens when you click a button
     def click(self, text, write):
-        # this function handles what happens when you click a button
-        # 'write' argument if True means the value 'val' should be written on
-        # screen, if None, should not be written on screen
         if write == None:
+
             # get input from keyboard input box
             kbInput = self.b27.get()
 
@@ -138,15 +131,14 @@ class Calculator:
             self.insert_screen(text)
 
     def clear_screen(self):
-        # set equation to empty before deleting screen
         self.equation = ""
         self.screen.configure(state="normal")
         self.screen.delete("1.0", END)
 
+    # record and display on screen
     def insert_screen(self, value, newline=False):
         self.screen.configure(state="normal")
         self.screen.insert(END, value)
-        # record every value inserted in screen
         self.equation += str(value)
         self.screen.configure(state="disabled")
 

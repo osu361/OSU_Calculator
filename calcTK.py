@@ -8,7 +8,6 @@ class Calculator:
 
         self.master = master
         master.title("OSU Calculator")
-        frame = Frame(master)
 
         # screen font
         self.screenFont = font.Font(weight="bold", size=40)
@@ -25,6 +24,7 @@ class Calculator:
                            font=self.screenFont, pady=10)
 
         # position screen in window
+        # make grid spaces dynamic in size
         for i in range(8):
             Grid.rowconfigure(root, i, weight=1)
 
@@ -33,10 +33,6 @@ class Calculator:
 
         self.screen.grid(row=0, column=0, columnspan=4,
                          padx=1, pady=20, sticky=N+S+E+W)
-        grid = Frame(frame)
-        grid.grid(sticky=N+S+E+W, column=0, row=7, columnspan=2)
-        Grid.rowconfigure(frame, 7, weight=1)
-        Grid.columnconfigure(frame, 0, weight=1)
 
         # initialize screen value as empty
         self.equation = ""

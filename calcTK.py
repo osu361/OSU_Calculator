@@ -40,64 +40,61 @@ class Calculator:
         # ------------------------main buttons (20)------------------------------
 
         # 1st row buttons
-        b1 = self.createButton(u"CLEAR", None).grid(
+        self.createButton(u"CLEAR", None).grid(
             row=1, column=0, sticky=(N, S, E, W))
-        b2 = self.createButton('%').grid(row=1, column=1, sticky=(N, S, E, W))
-        b3 = self.createButton(u"\u232B", None).grid(
+        self.createButton('%').grid(row=1, column=1, sticky=(N, S, E, W))
+        self.createButton(u"\u232B", None).grid(
             row=1, column=2, sticky=(N, S, E, W))
-        b4 = self.createButton("/").grid(row=1, column=3, sticky=(N, S, E, W))
+        self.createButton("/").grid(row=1, column=3, sticky=(N, S, E, W))
 
         # 2nd row buttons
-        b5 = self.createButton(7).grid(row=2, column=0, sticky=(N, S, E, W))
-        b6 = self.createButton(8).grid(row=2, column=1, sticky=(N, S, E, W))
-        b7 = self.createButton(9).grid(row=2, column=2, sticky=(N, S, E, W))
-        b8 = self.createButton("*").grid(row=2, column=3, sticky=(N, S, E, W))
+        self.createButton(7).grid(row=2, column=0, sticky=(N, S, E, W))
+        self.createButton(8).grid(row=2, column=1, sticky=(N, S, E, W))
+        self.createButton(9).grid(row=2, column=2, sticky=(N, S, E, W))
+        self.createButton("*").grid(row=2, column=3, sticky=(N, S, E, W))
 
         # 3rd row buttons
-        b9 = self.createButton(4).grid(row=3, column=0, sticky=(N, S, E, W))
-        b10 = self.createButton(5).grid(row=3, column=1, sticky=(N, S, E, W))
-        b11 = self.createButton(6).grid(row=3, column=2, sticky=(N, S, E, W))
-        b12 = self.createButton("-").grid(row=3, column=3, sticky=(N, S, E, W))
+        self.createButton(4).grid(row=3, column=0, sticky=(N, S, E, W))
+        self.createButton(5).grid(row=3, column=1, sticky=(N, S, E, W))
+        self.createButton(6).grid(row=3, column=2, sticky=(N, S, E, W))
+        self.createButton("-").grid(row=3, column=3, sticky=(N, S, E, W))
 
         # 4th row buttons
-        b13 = self.createButton(1).grid(row=4, column=0, sticky=(N, S, E, W))
-        b14 = self.createButton(2).grid(row=4, column=1, sticky=(N, S, E, W))
-        b15 = self.createButton(3).grid(row=4, column=2, sticky=(N, S, E, W))
-        b16 = self.createButton("+").grid(row=4, column=3, sticky=(N, S, E, W))
+        self.createButton(1).grid(row=4, column=0, sticky=(N, S, E, W))
+        self.createButton(2).grid(row=4, column=1, sticky=(N, S, E, W))
+        self.createButton(3).grid(row=4, column=2, sticky=(N, S, E, W))
+        self.createButton("+").grid(row=4, column=3, sticky=(N, S, E, W))
 
         # 5th row buttons
-        b17 = self.createButton(".").grid(row=5, column=0, sticky=(N, S, E, W))
-        b18 = self.createButton(0).grid(row=5, column=1, sticky=(N, S, E, W))
-        b19 = self.createButton("<", None).grid(
-            row=5, column=2, sticky=(N, S, E, W))
-        b20 = self.createButton("=", None).grid(
-            row=5, column=3, sticky=(N, S, E, W))
+        self.createButton(".").grid(row=5, column=0, sticky=(N, S, E, W))
+        self.createButton(0).grid(row=5, column=1, sticky=(N, S, E, W))
+        self.createButton("<", None).grid(row=5, column=2, sticky=(N, S, E, W))
+        self.createButton("=", None).grid(row=5, column=3, sticky=(N, S, E, W))
 
         # -----------------dropdown menu and keyboard input----------------------
         # 6th row dropdown menu
-        Label(self.master, text="Function:", font=self.eqFont).grid(
-            row=7)
+        Label(self.master, text="Function:", font=self.eqFont).grid(row=7)
         self.options = ["BasicCalc", "SaveHist", "Save2File",
                         "CalcLog", "Hamming"]
         variable = StringVar(master)
         variable.set(self.options[0])  # default value
-        b26 = OptionMenu(master, variable, *self.options)
-        b26.config(font=self.eqFont)
-        b26.grid(row=7, column=1, sticky=(N, S, E, W))
+        dDownMenu = OptionMenu(master, variable, *self.options)
+        dDownMenu.config(font=self.eqFont)
+        dDownMenu.grid(row=7, column=1, sticky=(N, S, E, W))
 
         # 7th row keyboard input
 
         # create keyboard input box and place on grid
-        self.b27 = Entry(self.master, width=26,
-                         textvariable=self.equation, font=self.myFont)
-        self.b27.grid(row=8, column=0, columnspan=5,
-                      padx=1, pady=3, sticky=(N, S, E, W))
+        self.kbInput = Entry(self.master, width=26,
+                             textvariable=self.equation, font=self.myFont)
+        self.kbInput.grid(row=8, column=0, columnspan=5,
+                          padx=1, pady=3, sticky=(N, S, E, W))
 
         # create ENTER button and place on grid
-        b28 = Button(self.master, text="ENTER", command=lambda:
-                     self.click("ENTER", None), font=self.myFont,
-                     height=2, padx=5, pady=1,)
-        b28.grid(row=8, column=3, sticky=(N, S, E, W))
+        entButton = Button(self.master, text="ENTER", command=lambda:
+                           self.click("ENTER", None), font=self.myFont,
+                           height=2, padx=5, pady=1,)
+        entButton.grid(row=8, column=3, sticky=(N, S, E, W))
 
     # ----------------------------functions ------------------------------------
 
@@ -122,10 +119,11 @@ class Calculator:
 
             # calculates input from keyboard input box
             elif text == "ENTER":
-                print(self.b27.get())
-                answer = str(eval(self.b27.get()))  # get and eval kbinput
+                print(self.kbInput.get())
+                answer = str(eval(self.kbInput.get()))  # get and eval kbinput
                 self.clear_screen()
                 self.insert_screen(answer, newline=True)
+                self.kbInput.delete(0, 'end')  # clear kbInput screen
 
             # backspace
             elif text == u'\u232b':  # this needs to backspace not clear

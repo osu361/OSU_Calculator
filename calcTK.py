@@ -65,7 +65,7 @@ class Calculator:
         b15 = self.createButton(3).grid(row=4, column=2, sticky=(N, S, E, W))
         b16 = self.createButton("+").grid(row=4, column=3, sticky=(N, S, E, W))
 
-        # 5th row button-
+        # 5th row button
         b17 = self.createButton(".").grid(row=5, column=0, sticky=(N, S, E, W))
         b18 = self.createButton(0).grid(row=5, column=1, sticky=(N, S, E, W))
         b19 = self.createButton("<", None).grid(
@@ -113,9 +113,6 @@ class Calculator:
     def click(self, text, write):
         if write == None:
 
-            # get input from keyboard input box
-            kbInput = self.b27.get()
-
             # only evaluate code when there is an equation to be evaluated
             if text == "=" and self.equation:
                 print(self.equation)
@@ -125,8 +122,8 @@ class Calculator:
 
             # calculates input from keyboard input box
             elif text == "ENTER":
-                print(kbInput)
-                answer = str(eval(kbInput))
+                print(self.b27.get())
+                answer = str(eval(self.b27.get()))  # get and eval kbinput
                 self.clear_screen()
                 self.insert_screen(answer, newline=True)
 

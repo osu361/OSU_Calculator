@@ -5,7 +5,7 @@
 from tkinter import *
 import math
 
-# A global constant of sorts. MUST UPDATE TpyHIS VALUE WHEN ADD A BUTTON
+# A global constant of sorts. MUST UPDATE THIS VALUE WHEN ADD A BUTTON
 NUM_BUTTONS = 18
   
 class Mathematics:

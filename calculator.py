@@ -5,8 +5,8 @@
 from tkinter import *
 import math
 
-# A global constant of sorts. MUST UPDATE THIS VALUE WHEN ADD A BUTTON
-NUM_BUTTONS = 18
+# A global constant of sorts. The number of columns in the calculator
+NUM_COLUMNS = 4
   
 class Mathematics:
     def basic(self, expression):
@@ -40,9 +40,8 @@ class Calculator:
         #self.master.geometry("265x125") 
         #self.master.geometry("400x300") 
 
-        self.numColumns = 4  #use this to change the number of columns
-        self.numButtons = NUM_BUTTONS  #IMPORTANT TO UPDATE THIS AFTER ADD BUTTON
-        self.numRows = self.numButtons//self.numColumns + 1  #row number starts from 1 since row 0 is for the display
+        self.numColumns = NUM_COLUMNS  #use this to change the number of columns
+        
 
         #example for adding other functionality
         self.Flag = ""
@@ -92,7 +91,10 @@ class Calculator:
             Button(self.master, text=' = ', fg= 'black', bg = 'red', command=self.equalpress, width=7, height = 1),
             Button(self.master, text='log', fg= 'black', bg = 'red', command=lambda: self.setFlag("log"), width=7, height = 1)
         ]
+
+        self.lengthOfbuttonList = len(self.buttonList)
         
+        self.numRows = self.lengthOfbuttonList//self.numColumns + 1  #row number starts from 1 since row 0 is for the display
        
         index = 0
         for row in range (1, self.numRows):
@@ -103,7 +105,7 @@ class Calculator:
         
         row += 1
         column = 0
-        for i in range (index, len(self.buttonList)):
+        for i in range (index, self.lengthOfbuttonList):
             self.buttonList[index].grid(row = row, column = column)
             #print("row= ",row, " column= ", column)
             index += 1

@@ -57,17 +57,6 @@ class Calculator:
         # we create an instance of this class 
         # this holds a variable in a class from ktinker
         self.equation = StringVar() 
-
-        #when/if it is needed below is how to declare a
-        #boolean variable
-        self.boolean_variable = BooleanVar()
-        self.boolean_variable.set = (True)
-
-        #and when/if it is needed below is how to declare an intvariable
-        # and a double, both initialized via the constuctor instead of
-        #separately as above
-        self.int_variable = IntVar(self.master, 0)
-        self.double_variable = DoubleVar(self.master, 0.0);
   
         # create the text entry box for 
         # showing the expression . 
@@ -80,27 +69,29 @@ class Calculator:
     
         self.equation.set('0') 
 
-        self.buttonList = []
-
-        # create buttons using method createButton
-        self.buttonList.append(self.createButton(inputText=' 7 ', commandfunc=lambda: self.press(7)) )
-        self.buttonList.append(self.createButton(inputText=' 8 ', commandfunc=lambda: self.press(8)) ) 
-        self.buttonList.append(self.createButton(inputText=' 9 ',  commandfunc=lambda: self.press(9)) ) 
-        self.buttonList.append(self.createButton(inputText=u"\u232B",commandfunc= self.clear )) 
-        self.buttonList.append(self.createButton(inputText=' 4 ',commandfunc=lambda: self.press(4)) ) 
-        self.buttonList.append(self.createButton(inputText=' 5 ', commandfunc=lambda: self.press(5)) ) 
-        self.buttonList.append(self.createButton(inputText=' 6 ', commandfunc=lambda: self.press(6)) ) 
-        self.buttonList.append(self.createButton(inputText=u"\u00F7", commandfunc=lambda: self.press("/"))) 
-        self.buttonList.append(self.createButton(inputText=' 1 ', commandfunc=lambda: self.press(1)) )  
-        self.buttonList.append(self.createButton(inputText=' 2 ', commandfunc=lambda: self.press(2))) 
-        self.buttonList.append(self.createButton(inputText=' 3 ', commandfunc=lambda: self.press(3)) ) 
-        self.buttonList.append(self.createButton(inputText=' * ', commandfunc=lambda: self.press("*")) ) 
-        self.buttonList.append(self.createButton(inputText=' . ', commandfunc=lambda: self.press(".")) ) 
-        self.buttonList.append(self.createButton(inputText=' 0 ', commandfunc=lambda: self.press(0)) ) 
-        self.buttonList.append(self.createButton(inputText=' + ', commandfunc=lambda: self.press("+")) ) 
-        self.buttonList.append(self.createButton(inputText=' - ', commandfunc=lambda: self.press("-")) ) 
-        self.buttonList.append(self.createButton(inputText=' = ', commandfunc=self.equalpress) ) 
-        self.buttonList.append(self.createButton(inputText='log', commandfunc=lambda: self.setFlag("log")) ) 
+        self.buttonList = [
+            Button(self.master, text=' 7 ', fg= 'black', bg = 'red', command=lambda: self.press(7), width=7, height = 1),
+            Button(self.master, text=' 8 ', fg= 'black', bg = 'red', command=lambda: self.press(8), width=7, height = 1),
+            Button(self.master, text=' 9 ',  fg= 'black', bg = 'red', command=lambda: self.press(9), width=7, height = 1),
+            Button(self.master, text=u"\u232B", fg= 'black', bg = 'red', command= self.clear, width=7, height = 1),
+            Button(self.master, text=' 4 ',fg= 'black', bg = 'red', command=lambda: self.press(4), width=7, height = 1),
+            
+            Button(self.master, text=' 5 ', fg= 'black', bg = 'red', command=lambda: self.press(5), width=7, height = 1),
+            Button(self.master, text=' 6 ', fg= 'black', bg = 'red', command=lambda: self.press(6), width=7, height = 1),
+            Button(self.master, text=u"\u00F7", fg= 'black', bg = 'red', command=lambda: self.press("/"), width=7, height = 1),
+            Button(self.master, text=' 1 ', fg= 'black', bg = 'red', command=lambda: self.press(1), width=7, height = 1),
+            Button(self.master, text=' 2 ', fg= 'black', bg = 'red', command=lambda: self.press(2), width=7, height = 1),
+            
+            Button(self.master, text=' 3 ', fg= 'black', bg = 'red', command=lambda: self.press(3), width=7, height = 1),
+            Button(self.master, text=' * ', fg= 'black', bg = 'red', command=lambda: self.press("*"), width=7, height = 1),
+            Button(self.master, text=' . ', fg= 'black', bg = 'red', command=lambda: self.press("."), width=7, height = 1),
+            Button(self.master, text=' 0 ', fg= 'black', bg = 'red', command=lambda: self.press(0), width=7, height = 1),
+            Button(self.master, text=' + ', fg= 'black', bg = 'red', command=lambda: self.press("+"), width=7, height = 1),
+            
+            Button(self.master, text=' - ', fg= 'black', bg = 'red', command=lambda: self.press("-"), width=7, height = 1),
+            Button(self.master, text=' = ', fg= 'black', bg = 'red', command=self.equalpress, width=7, height = 1),
+            Button(self.master, text='log', fg= 'black', bg = 'red', command=lambda: self.setFlag("log"), width=7, height = 1)
+        ]
         
        
         index = 0
@@ -117,12 +108,6 @@ class Calculator:
             #print("row= ",row, " column= ", column)
             index += 1
             column += 1
-
-    def createButton(self,inputText,commandfunc ,write=True,width=7, height = 1  ):
-    # this function creates a button, and takes one compulsory argument, the value that should be on the button
-
-        return Button(self.master, text=inputText, fg= 'black', bg = 'red',
-            command = commandfunc , height= height, width=width)
 
     def setFlag(self, flag):
         self.Flag = flag

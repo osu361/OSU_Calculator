@@ -7,6 +7,9 @@ import math
 
 # A global constant of sorts. The number of columns in the calculator
 NUM_COLUMNS = 4
+BTN_BG_COLOR = "red"
+BTN_TXT_COLOR = "black"
+CALC_BG_COLOR = "light green"
 
 
 
@@ -21,13 +24,13 @@ class Mathematics:
             result = math.log10(floatValue)
         except:
             result = "error"
-        return result
+        return str(result)
 
 class Calculator:
     def __init__(self, master):
         self.master = master
          # set the background colour of GUI window
-        self.master.configure(background="light green")
+        self.master.configure(background=CALC_BG_COLOR)
 
         #use object instance to access math functions in the Mathematics class
         self.my_math = Mathematics()
@@ -69,36 +72,40 @@ class Calculator:
         # in table like structure .
         self.expression_field.grid(columnspan=self.numColumns, ipadx=70)
 
+        self.saved_answer = None
+        self.previous_answer = 0
+
         self.equation.set('0')
 
         self.buttonList = [
 
-            Button(self.master, text='save', fg= 'black', bg = 'red', command=lambda: self.saveAnswer(), width=7, height = 1),
-            Button(self.master, text='load', fg= 'black', bg = 'red', command=lambda: self.loadAnswer(), width=7, height = 1),
-            Button(self.master, text='clr save', fg= 'black', bg = 'red', command=lambda: self.clearAnswer(), width=7, height = 1),
-            Button(self.master, text='clr save', fg= 'black', bg = 'red', command=lambda: self.clearAnswer(), width=7, height = 1),
+            Button(self.master, text='save', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.saveAnswer(), width=7, height = 1),
+            Button(self.master, text='load', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.loadAnswer(), width=7, height = 1),
+            Button(self.master, text='clr save', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.clearAnswer(), width=7, height = 1),
+            Button(self.master, text=u"\u232B", fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=self.clear, width=7, height=1),
 
-            Button(self.master, text=' 7 ', fg= 'black', bg = 'red', command=lambda: self.press(7), width=7, height = 1),
-            Button(self.master, text=' 8 ', fg= 'black', bg = 'red', command=lambda: self.press(8), width=7, height = 1),
-            Button(self.master, text=' 9 ',  fg= 'black', bg = 'red', command=lambda: self.press(9), width=7, height = 1),
-            Button(self.master, text=u"\u232B", fg= 'black', bg = 'red', command= self.clear, width=7, height = 1),
-            Button(self.master, text=' 4 ',fg= 'black', bg = 'red', command=lambda: self.press(4), width=7, height = 1),
+            Button(self.master, text=' 7 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.press(7), width=7, height = 1),
+            Button(self.master, text=' 8 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.press(8), width=7, height = 1),
+            Button(self.master, text=' 9 ',  fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.press(9), width=7, height = 1),
+            Button(self.master, text=u"\u00F7", fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.press("/"), width=7, height = 1),
 
-            Button(self.master, text=' 5 ', fg= 'black', bg = 'red', command=lambda: self.press(5), width=7, height = 1),
-            Button(self.master, text=' 6 ', fg= 'black', bg = 'red', command=lambda: self.press(6), width=7, height = 1),
-            Button(self.master, text=u"\u00F7", fg= 'black', bg = 'red', command=lambda: self.press("/"), width=7, height = 1),
-            Button(self.master, text=' 1 ', fg= 'black', bg = 'red', command=lambda: self.press(1), width=7, height = 1),
-            Button(self.master, text=' 2 ', fg= 'black', bg = 'red', command=lambda: self.press(2), width=7, height = 1),
+            Button(self.master, text=' 4 ',fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.press(4), width=7, height = 1),
+            Button(self.master, text=' 5 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.press(5), width=7, height = 1),
+            Button(self.master, text=' 6 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.press(6), width=7, height = 1),
+            Button(self.master, text=' * ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.press("*"), width=7, height=1),
 
-            Button(self.master, text=' 3 ', fg= 'black', bg = 'red', command=lambda: self.press(3), width=7, height = 1),
-            Button(self.master, text=' * ', fg= 'black', bg = 'red', command=lambda: self.press("*"), width=7, height = 1),
-            Button(self.master, text=' . ', fg= 'black', bg = 'red', command=lambda: self.press("."), width=7, height = 1),
-            Button(self.master, text=' 0 ', fg= 'black', bg = 'red', command=lambda: self.press(0), width=7, height = 1),
-            Button(self.master, text=' + ', fg= 'black', bg = 'red', command=lambda: self.press("+"), width=7, height = 1),
+            Button(self.master, text=' 1 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.press(1), width=7, height = 1),
+            Button(self.master, text=' 2 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.press(2), width=7, height = 1),
+            Button(self.master, text=' 3 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.press(3), width=7, height = 1),
+            Button(self.master, text=' - ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.press("-"), width=7, height=1),
 
-            Button(self.master, text=' - ', fg= 'black', bg = 'red', command=lambda: self.press("-"), width=7, height = 1),
-            Button(self.master, text=' = ', fg= 'black', bg = 'red', command=self.equalpress, width=7, height = 1),
-            Button(self.master, text='log', fg= 'black', bg = 'red', command=lambda: self.setFlag("log"), width=7, height = 1),
+            Button(self.master, text=' . ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.press("."), width=7, height = 1),
+            Button(self.master, text=' 0 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.press(0), width=7, height = 1),
+            Button(self.master, text='log', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.setFlag("log"), width=7, height=1),
+            Button(self.master, text=' + ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.press("+"), width=7, height = 1),
+
+            Button(self.master, text=' = ', fg= BTN_TXT_COLOR, bg = BTN_BG_COLOR, command=self.equalpress, width=28, height = 1),
+
 
 
         ]
@@ -116,14 +123,16 @@ class Calculator:
 
         row += 1
         column = 0
-        for i in range (index, self.lengthOfbuttonList):
+        for i in range (index, self.lengthOfbuttonList-1):
             self.buttonList[index].grid(row = row, column = column)
             #print("row= ",row, " column= ", column)
             index += 1
             column += 1
 
-        self.saved_answer = None
-        self.previous_answer = 0
+        row += 1
+        self.buttonList[index].grid(row=row, column=0, columnspan=self.numColumns)
+
+
 
     def setFlag(self, flag):
         self.Flag = flag
@@ -166,7 +175,10 @@ class Calculator:
                 total = self.my_math.basic(self.expression) #eval takes a string expression and evaluates it
 
             self.equation.set(total)
-            self.previous_answer = total
+
+            self.previous_answer = eval(total)
+
+
             # initialze the expression variable
             # by empty string
             self.expression = ""
@@ -188,7 +200,7 @@ class Calculator:
         self.Flag = ""
         self.equation.set("")
 
-    def saveAnser(self):
+    def saveAnswer(self):
         self.saved_answer = self.previous_answer
 
     def loadAnswer(self):
@@ -196,7 +208,7 @@ class Calculator:
             self.displayError()
         else:
             self.expression = str(self.saved_answer)
-            self.equation = self.expression
+            self.equation.set(self.expression)
 
     def clearAnswer(self):
         self.saved_answer = None

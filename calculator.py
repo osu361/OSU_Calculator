@@ -1,5 +1,8 @@
 # Python program to  create a simple GUI
 # calculator using Tkinter
+# References: 
+# https://www.geeksforgeeks.org/python-simple-gui-calculator-using-tkinter/
+# https://medium.com/@adeyinkaadegbenro/project-build-a-python-gui-calculator-fc92bddb744d
 
 # import everything from tkinter module
 from tkinter import *
@@ -11,7 +14,13 @@ BTN_BG_COLOR = "red"
 BTN_TXT_COLOR = "black"
 CALC_BG_COLOR = "light green"
 
+#EXAMPLE: class helloworld
+class HelloWorld:
+    def __init__(self):
+        self.message = "Hello World!"
 
+    def printMessage(self, equation):
+        equation.set(self.message)
 
 
 class Mathematics:
@@ -26,6 +35,7 @@ class Mathematics:
             result = "error"
         return str(result)
 
+
 class Calculator:
     def __init__(self, master):
         self.master = master
@@ -34,6 +44,9 @@ class Calculator:
 
         #use object instance to access math functions in the Mathematics class
         self.my_math = Mathematics()
+
+        #EXAMPLE: Create a HelloWorld class object to call the HelloWorld class functions
+        self.my_hello = HelloWorld()
 
         # set the title of GUI window
         self.master.title("Calculator")
@@ -103,6 +116,10 @@ class Calculator:
             Button(self.master, text=' 0 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.press(0), width=7, height = 1),
             Button(self.master, text='log', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.setFlag("log"), width=7, height=1),
             Button(self.master, text=' + ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.press("+"), width=7, height = 1),
+
+            #EXAMPLE:  add helloworld button
+            Button(self.master, text='HW', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.my_hello.printMessage(self.equation),
+                    width=7, height = 1),
 
             Button(self.master, text=' = ', fg= BTN_TXT_COLOR, bg = BTN_BG_COLOR, command=self.equalpress, width=28, height = 1),
 

@@ -163,6 +163,8 @@ class Calculator:
 
         row += 1
         column = 0
+        Grid.rowconfigure(self.master, row, weight=1)  # sticky
+
         for i in range(index, self.lengthOfbuttonList-1):
             self.buttonList[index].grid(
                 row=row, column=column, sticky=(N, S, E, W))  # sticky
@@ -171,8 +173,10 @@ class Calculator:
             column += 1
 
         row += 1
+        Grid.rowconfigure(self.master, row, weight=1)  # sticky
+
         self.buttonList[index].grid(
-            row=row, column=0, columnspan=self.numColumns)
+            row=row, column=0, columnspan=self.numColumns, sticky=(N, S, E, W))
 
     def setFlag(self, flag):
         self.Flag = flag
@@ -260,5 +264,6 @@ class Calculator:
 if __name__ == "__main__":
     # create a GUI window
     root = Tk()
+    root.geometry("350x300")
     my_gui = Calculator(root)
     root.mainloop()

@@ -264,6 +264,6 @@ class Calculator:
 if __name__ == "__main__":
     # create a GUI window
     root = Tk()
-    root.geometry("350x300")
+    root.geometry("300x300")
     my_gui = Calculator(root)
     root.mainloop()

@@ -189,6 +189,9 @@ class Calculator:
         self.buttonList[index].grid(
             row=row, column=0, columnspan=self.numColumns, sticky=(N, S, E, W))
 
+        # listen for enter key
+        self.master.bind('<Return>', self.enterKey)
+
     def setFlag(self, flag):
         self.Flag = flag
         self.press(flag)
@@ -206,7 +209,6 @@ class Calculator:
         self.equation.set(self.expression)
 
     # Function to evaluate the final expression
-
     def equalpress(self):
         # Try and except statement is used
         # for handling the errors like zero
@@ -269,6 +271,9 @@ class Calculator:
     def displayError(self):
         self.equation.set(" error ")
         self.expression = ""
+
+    def enterKey(self, event):
+        self.equalpress()
 
 
 # Driver code

@@ -72,6 +72,7 @@ class Calculator:
         # in table like structure .
         self.expression_field.grid(columnspan=self.numColumns, ipadx=70)
 
+        # variables to save most recent result and user selected answer to save
         self.saved_answer = None
         self.previous_answer = 0
 
@@ -129,6 +130,7 @@ class Calculator:
             index += 1
             column += 1
 
+        # assign the "=" button to it own row at the bottom of the calculator
         row += 1
         self.buttonList[index].grid(row=row, column=0, columnspan=self.numColumns)
 
@@ -176,7 +178,7 @@ class Calculator:
 
             self.equation.set(total)
 
-            self.previous_answer = eval(total)
+            self.previous_answer = eval(total)  # save result of operation to previous answer variable
 
 
             # initialze the expression variable
@@ -200,9 +202,11 @@ class Calculator:
         self.Flag = ""
         self.equation.set("")
 
+    # Function to save the previous answer for later use
     def saveAnswer(self):
         self.saved_answer = self.previous_answer
 
+    # Function to load a previously saved answer, displays an error if no saved answer exists
     def loadAnswer(self):
         if self.saved_answer is None:
             self.displayError()
@@ -210,9 +214,11 @@ class Calculator:
             self.expression = str(self.saved_answer)
             self.equation.set(self.expression)
 
+    # function to erase the previously saved answer
     def clearAnswer(self):
         self.saved_answer = None
 
+    # function to display error to the screen if the user tries to perform illegal operations
     def displayError(self):
         self.equation.set(" error ")
         self.expression = ""

@@ -285,6 +285,7 @@ class Calculator:
             # into string
 
             if (self.Flag == "log"):  # example of implementing a function
+                self.expression = self.my_math.basic(self.expression)
                 total = self.my_math.log10(self.expression)
             else:
                 # eval takes a string expression and evaluates it

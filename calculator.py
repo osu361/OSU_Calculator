@@ -90,13 +90,15 @@ class Calculator:
         self.expression_field.grid(columnspan=self.numColumns, ipadx=70)
 
         # variables to save most recent result and user selected answer to save
-        self.operand = [None, None]
-        self.operand_one_negative = 1
-        self.operand_two = None
-        self.operand_two_negative = 1
+        self.operands = [None, None]
+        self.operator = None
+        self.is_decimal = [False, False]
+
+        self.clear_stack = False
+
         self.saved_answer = None
         self.previous_answer = None
-        self.operator = None
+
         self.equation.set('0')
 
         self.buttonList = [
@@ -205,33 +207,70 @@ class Calculator:
     def press(self, num:str):
         # point out the global expression variable
         # global expression
-'''
+
         #Refactoring for building operands
-        if num.isnumeric():
-            if self.operand[0] == None:
-                self.operand[0] = num
-            elif self.operator[0] == None:
-                self.operand[0] += num
-            elif self.operand[1] == None:
-                self.operand[1] = num
+        is_operand_data = num.isnumeric() or num == "negative"
+        is_operand_data = is_operand_data or num == "."
+
+        if is_operand_data:
+            if self.operator is None:
+                self.set_operand(0, num)
             else:
-                self.operand[1] += num
-        elif num == 'negative':
-           if self.operator == None:
-               self.operand_one_negative *= -1
-           else:
-                self.operand_two_negative *= -1
-'''
+                self.set_operand(1, num)
+            # if self.operator == None:
+            #     self.operand[0] = num
+            # elif self.operator[0] == None:
+            #     self.operand[0] += num
+            # elif self.operand[1] == None:
+            #     self.operand[1] = num
+            # else:
+            #     self.operand[1] += num
+        elif self.Flag is not None or num in "*+-/":
+            if self.operator is not None:
+                self.equalpress()
+
+            if self.operands[0] is not None:
+                self.set_operator(num)
+        else:
+            self.displayError()
+
+        if self.operands[0] is not None:
+            self.expression = self.operands[0]
+            if self.operator is not None:
+                self.expression += self.operator
+                if self.operands[1] is not None:
+                    self.expression += self.operands[1]
+            self.equation.set(self.expression)
+        else:
+            self.displayError()
 
 
+        """
         # concatenation of string
         self.expression = self.expression + str(num)
 
         # update the expression by using set method
         self.equation.set(self.expression)
+        """
 
+    def set_operand(self, idx, num):
 
+        if num != "." or not self.is_decimal[idx]:
+            if self.operands[idx] is None:
+                self.operands[idx] = num
+            else:
+                if num == "negative":
+                    if self.operands[idx][0] == '-':
+                        self.operands[idx] = self.operands[idx][1:]
+                    else:
+                        self.operands[idx] = "-" + self.operands[idx]
+                else:
+                    self.operands[idx] += num
+        else:
+            self.displayError("invalid key")
 
+    def set_operator(self, operator):
+        self.operator = operator
 
     # Function to evaluate the final expression
 
@@ -260,12 +299,15 @@ class Calculator:
 
             self.equation.set(total)
 
-            self.previous_answer = eval(total)  # save result of operation to previous answer variable
+            self.previous_answer = total  # save result of operation to previous answer variable
+            self.operands[0] = self.previous_answer
 
             # initialze the expression variable
             # by empty string
             self.expression = ""
             self.Flag = ""
+            self.operator = None
+            self.operands[1] = None
 
         # if error is generate then handle
         # by the except block
@@ -277,6 +319,11 @@ class Calculator:
 
     def clear(self):
         # global expression
+        self.operands[0] = None
+        self.operands[1] = None
+        self.operator = None
+        self.clear_stack = not self.clear_stack  # logic for stack size
+
         self.expression = ""
         self.Flag = ""
         self.equation.set("")
@@ -298,7 +345,7 @@ class Calculator:
         self.saved_answer = None
 
     # function to display error to the screen if the user tries to perform illegal operations
-    def displayError(self):
+    def displayError(self, msg=" error "):
         self.equation.set(" error ")
         self.expression = ""
 

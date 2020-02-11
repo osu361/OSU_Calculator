@@ -7,6 +7,8 @@
 # import everything from tkinter module
 from tkinter import *
 import math
+from math import log
+
 
 # A global constant of sorts. The number of columns in the calculator
 NUM_COLUMNS = 4
@@ -28,6 +30,7 @@ class HelloWorld:
 class Mathematics:
     def basic(self, expression):
         return str(eval(expression))
+
 
     def log10(self, expression):
         try:
@@ -87,9 +90,13 @@ class Calculator:
         self.expression_field.grid(columnspan=self.numColumns, ipadx=70)
 
         # variables to save most recent result and user selected answer to save
+        self.operand = [None, None]
+        self.operand_one_negative = 1
+        self.operand_two = None
+        self.operand_two_negative = 1
         self.saved_answer = None
-        self.previous_answer = 0
-
+        self.previous_answer = None
+        self.operator = None
         self.equation.set('0')
 
         self.buttonList = [
@@ -103,37 +110,46 @@ class Calculator:
             Button(self.master, text=u"\u232B", fg=BTN_TXT_COLOR,
                    bg=BTN_BG_COLOR, command=self.clear, width=7, height=1),
 
+            Button(self.master, text=' ( ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.press('('), width=7, height=1),
+            Button(self.master, text=' ) ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.press(')'), width=7, height=1),
+            Button(self.master, text=' UNDO ',  fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.setFlag('UNDO'), width=7, height=1),
+            Button(self.master, text=' REDO ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.setFlag('REDO'), width=7, height=1),
+
             Button(self.master, text=' 7 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.press(7), width=7, height=1),
+                   command=lambda: self.press('7'), width=7, height=1),
             Button(self.master, text=' 8 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.press(8), width=7, height=1),
+                   command=lambda: self.press('8'), width=7, height=1),
             Button(self.master, text=' 9 ',  fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.press(9), width=7, height=1),
+                   command=lambda: self.press('9'), width=7, height=1),
             Button(self.master, text=u"\u00F7", fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.press("/"), width=7, height=1),
 
             Button(self.master, text=' 4 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.press(4), width=7, height=1),
+                   command=lambda: self.press('4'), width=7, height=1),
             Button(self.master, text=' 5 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.press(5), width=7, height=1),
+                   command=lambda: self.press('5'), width=7, height=1),
             Button(self.master, text=' 6 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.press(6), width=7, height=1),
+                   command=lambda: self.press('6'), width=7, height=1),
             Button(self.master, text=' * ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.press("*"), width=7, height=1),
 
             Button(self.master, text=' 1 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.press(1), width=7, height=1),
+                   command=lambda: self.press('1'), width=7, height=1),
             Button(self.master, text=' 2 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.press(2), width=7, height=1),
+                   command=lambda: self.press('2'), width=7, height=1),
             Button(self.master, text=' 3 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.press(3), width=7, height=1),
+                   command=lambda: self.press('3'), width=7, height=1),
             Button(self.master, text=' - ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.press("-"), width=7, height=1),
 
             Button(self.master, text=' . ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.press("."), width=7, height=1),
             Button(self.master, text=' 0 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.press(0), width=7, height=1),
+                   command=lambda: self.press('0'), width=7, height=1),
             Button(self.master, text='log', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.setFlag("log"), width=7, height=1),
             Button(self.master, text=' + ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
@@ -186,15 +202,36 @@ class Calculator:
 
     # Function to update expressiom
     # in the text entry box
-    def press(self, num):
+    def press(self, num:str):
         # point out the global expression variable
         # global expression
+'''
+        #Refactoring for building operands
+        if num.isnumeric():
+            if self.operand[0] == None:
+                self.operand[0] = num
+            elif self.operator[0] == None:
+                self.operand[0] += num
+            elif self.operand[1] == None:
+                self.operand[1] = num
+            else:
+                self.operand[1] += num
+        elif num == 'negative':
+           if self.operator == None:
+               self.operand_one_negative *= -1
+           else:
+                self.operand_two_negative *= -1
+'''
+
 
         # concatenation of string
         self.expression = self.expression + str(num)
 
         # update the expression by using set method
         self.equation.set(self.expression)
+
+
+
 
     # Function to evaluate the final expression
 
@@ -273,3 +310,5 @@ if __name__ == "__main__":
     root.geometry("300x300")
     my_gui = Calculator(root)
     root.mainloop()
+
+

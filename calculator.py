@@ -6,7 +6,10 @@
 
 # import everything from tkinter module
 from tkinter import *
+
+import tkinter.font as font  # added this
 from math import *
+
 
 
 # A global constant of sorts. The number of columns in the calculator
@@ -46,6 +49,12 @@ class Calculator:
         # set the background colour of GUI window
         self.master.configure(background=CALC_BG_COLOR)
 
+        # screen font 30
+        self.screenFont = font.Font(weight="bold", size=30)  # added this
+
+        # button font 20
+        self.buttonFont = font.Font(weight="bold", size=20)  # added this
+
         # use object instance to access math functions in the Mathematics class
         self.my_math = Mathematics()
 
@@ -81,7 +90,8 @@ class Calculator:
 
         # create the text entry box for
         # showing the expression .
-        self.expression_field = Entry(self.master, textvariable=self.equation)
+        self.expression_field = Entry(
+            self.master, textvariable=self.equation, font=self.screenFont)
 
         # grid method is used for placing
         # the widgets at respective positions
@@ -98,7 +108,7 @@ class Calculator:
         self.saved_answer = None
         self.previous_answer = None
 
-        self.equation.set('0')
+        self.equation.set('')
 
         self.buttonList = [
 
@@ -157,11 +167,13 @@ class Calculator:
                    command=lambda: self.press("+"), width=7, height=1),
 
             # EXAMPLE:  add helloworld button
-            Button(self.master, text='HW', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.my_hello.printMessage(self.equation),
+            Button(self.master, text='HW', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.my_hello.printMessage(self.equation),
                    width=7, height=1),
 
             Button(self.master, text=' = ', fg=BTN_TXT_COLOR,
-                   bg=BTN_BG_COLOR, command=self.equalpress, width=28, height=1),
+                   bg=BTN_BG_COLOR, command=self.equalpress, width=28, height=1,
+                   font=self.buttonFont),
         ]
 
         self.lengthOfbuttonList = len(self.buttonList)
@@ -196,6 +208,9 @@ class Calculator:
 
         self.buttonList[index].grid(
             row=row, column=0, columnspan=self.numColumns, sticky=(N, S, E, W))
+
+        # listen for enter key
+        self.master.bind('<Return>', self.enterKey)
 
     def setFlag(self, flag):
         self.Flag = flag
@@ -242,7 +257,7 @@ class Calculator:
 
         """
         # concatenation of string
-        self.expression = self.expression + str(num)
+        self.expression += str(num)
 
         # update the expression by using set method
         self.equation.set(self.expression)
@@ -268,7 +283,6 @@ class Calculator:
         self.operator = operator
 
     # Function to evaluate the final expression
-
     def equalpress(self):
         # Try and except statement is used
         # for handling the errors like zero
@@ -285,10 +299,12 @@ class Calculator:
             # into string
 
             if (self.Flag == "log"):  # example of implementing a function
+                startIndex = len("log")
                 total = self.my_math.log10(self.expression)
+                self.expression = self.expression[startIndex:]
             else:
                 # eval takes a string expression and evaluates it
-                total = self.my_math.basic(self.expression)
+                total = self.my_math.basic(self.expression_field.get())
 
             self.equation.set(total)
 
@@ -341,6 +357,9 @@ class Calculator:
     def displayError(self, msg=" error "):
         self.equation.set(" error ")
         self.expression = ""
+
+    def enterKey(self, event):
+        self.equalpress()
 
 
 # Driver code

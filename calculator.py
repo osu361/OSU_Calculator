@@ -6,7 +6,8 @@
 
 # import everything from tkinter module
 from tkinter import *
-import math
+from math import *
+
 
 # A global constant of sorts. The number of columns in the calculator
 NUM_COLUMNS = 4
@@ -29,10 +30,11 @@ class Mathematics:
     def basic(self, expression):
         return str(eval(expression))
 
+
     def log10(self, expression):
         try:
             floatValue = float(expression)
-            result = math.log10(floatValue)
+            result = log10(floatValue)
         except:
             result = "error"
         return str(result)
@@ -87,8 +89,14 @@ class Calculator:
         self.expression_field.grid(columnspan=self.numColumns, ipadx=70)
 
         # variables to save most recent result and user selected answer to save
+        self.operands = [None, None]
+        self.operator = None
+        self.is_decimal = [False, False]
+
+        self.clear_stack = False
+
         self.saved_answer = None
-        self.previous_answer = 0
+        self.previous_answer = None
 
         self.equation.set('0')
 
@@ -103,37 +111,46 @@ class Calculator:
             Button(self.master, text=u"\u232B", fg=BTN_TXT_COLOR,
                    bg=BTN_BG_COLOR, command=self.clear, width=7, height=1),
 
+            Button(self.master, text=' ( ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.press('('), width=7, height=1),
+            Button(self.master, text=' ) ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.press(')'), width=7, height=1),
+            Button(self.master, text=' UNDO ',  fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.setFlag('UNDO'), width=7, height=1),
+            Button(self.master, text=' REDO ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.setFlag('REDO'), width=7, height=1),
+
             Button(self.master, text=' 7 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.press(7), width=7, height=1),
+                   command=lambda: self.press('7'), width=7, height=1),
             Button(self.master, text=' 8 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.press(8), width=7, height=1),
+                   command=lambda: self.press('8'), width=7, height=1),
             Button(self.master, text=' 9 ',  fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.press(9), width=7, height=1),
+                   command=lambda: self.press('9'), width=7, height=1),
             Button(self.master, text=u"\u00F7", fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.press("/"), width=7, height=1),
 
             Button(self.master, text=' 4 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.press(4), width=7, height=1),
+                   command=lambda: self.press('4'), width=7, height=1),
             Button(self.master, text=' 5 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.press(5), width=7, height=1),
+                   command=lambda: self.press('5'), width=7, height=1),
             Button(self.master, text=' 6 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.press(6), width=7, height=1),
+                   command=lambda: self.press('6'), width=7, height=1),
             Button(self.master, text=' * ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.press("*"), width=7, height=1),
 
             Button(self.master, text=' 1 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.press(1), width=7, height=1),
+                   command=lambda: self.press('1'), width=7, height=1),
             Button(self.master, text=' 2 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.press(2), width=7, height=1),
+                   command=lambda: self.press('2'), width=7, height=1),
             Button(self.master, text=' 3 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.press(3), width=7, height=1),
+                   command=lambda: self.press('3'), width=7, height=1),
             Button(self.master, text=' - ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.press("-"), width=7, height=1),
 
             Button(self.master, text=' . ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.press("."), width=7, height=1),
             Button(self.master, text=' 0 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.press(0), width=7, height=1),
+                   command=lambda: self.press('0'), width=7, height=1),
             Button(self.master, text='log', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.setFlag("log"), width=7, height=1),
             Button(self.master, text=' + ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
@@ -186,15 +203,69 @@ class Calculator:
 
     # Function to update expressiom
     # in the text entry box
-    def press(self, num):
+    def press(self, num:str):
         # point out the global expression variable
         # global expression
 
+        #Refactoring for building operands
+        is_operand_data = num.isnumeric() or num == "negative"
+        is_operand_data = is_operand_data or num == "."
+
+        if is_operand_data:
+            if self.operator is None:
+                self.set_operand(0, num)
+            else:
+                self.set_operand(1, num)
+
+        elif self.Flag is not None or num in "*+-/":
+            if self.operator is not None:
+                self.equalpress()
+
+            if self.operands[0] is not None:
+                self.set_operator(num)
+                if self.operator == "log":
+                    self.equalpress()
+
+        else:
+            self.displayError()
+
+        if self.operands[0] is not None:
+            self.expression = self.operands[0]
+            if self.operator is not None:
+                self.expression += self.operator
+                if self.operands[1] is not None:
+                    self.expression += self.operands[1]
+            self.equation.set(self.expression)
+        else:
+            self.displayError()
+
+
+        """
         # concatenation of string
         self.expression = self.expression + str(num)
 
         # update the expression by using set method
         self.equation.set(self.expression)
+        """
+
+    def set_operand(self, idx, num):
+
+        if num != "." or not self.is_decimal[idx]:
+            if self.operands[idx] is None:
+                self.operands[idx] = num
+            else:
+                if num == "negative":
+                    if self.operands[idx][0] == '-':
+                        self.operands[idx] = self.operands[idx][1:]
+                    else:
+                        self.operands[idx] = "-" + self.operands[idx]
+                else:
+                    self.operands[idx] += num
+        else:
+            self.displayError("invalid key")
+
+    def set_operator(self, operator):
+        self.operator = operator
 
     # Function to evaluate the final expression
 
@@ -214,8 +285,6 @@ class Calculator:
             # into string
 
             if (self.Flag == "log"):  # example of implementing a function
-                startIndex = len("log")
-                self.expression = self.expression[startIndex:]
                 total = self.my_math.log10(self.expression)
             else:
                 # eval takes a string expression and evaluates it
@@ -223,12 +292,15 @@ class Calculator:
 
             self.equation.set(total)
 
-            self.previous_answer = eval(total)  # save result of operation to previous answer variable
+            self.previous_answer = total  # save result of operation to previous answer variable
+            self.operands[0] = self.previous_answer
 
             # initialze the expression variable
             # by empty string
             self.expression = ""
             self.Flag = ""
+            self.operator = None
+            self.operands[1] = None
 
         # if error is generate then handle
         # by the except block
@@ -240,6 +312,11 @@ class Calculator:
 
     def clear(self):
         # global expression
+        self.operands[0] = None
+        self.operands[1] = None
+        self.operator = None
+        self.clear_stack = not self.clear_stack  # logic for stack size
+
         self.expression = ""
         self.Flag = ""
         self.equation.set("")
@@ -261,7 +338,7 @@ class Calculator:
         self.saved_answer = None
 
     # function to display error to the screen if the user tries to perform illegal operations
-    def displayError(self):
+    def displayError(self, msg=" error "):
         self.equation.set(" error ")
         self.expression = ""
 
@@ -273,3 +350,5 @@ if __name__ == "__main__":
     root.geometry("300x300")
     my_gui = Calculator(root)
     root.mainloop()
+
+

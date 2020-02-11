@@ -217,20 +217,16 @@ class Calculator:
                 self.set_operand(0, num)
             else:
                 self.set_operand(1, num)
-            # if self.operator == None:
-            #     self.operand[0] = num
-            # elif self.operator[0] == None:
-            #     self.operand[0] += num
-            # elif self.operand[1] == None:
-            #     self.operand[1] = num
-            # else:
-            #     self.operand[1] += num
+
         elif self.Flag is not None or num in "*+-/":
             if self.operator is not None:
                 self.equalpress()
 
             if self.operands[0] is not None:
                 self.set_operator(num)
+                if self.operator == "log":
+                    self.equalpress()
+
         else:
             self.displayError()
 
@@ -290,8 +286,6 @@ class Calculator:
             # into string
 
             if (self.Flag == "log"):  # example of implementing a function
-                startIndex = len("log")
-                self.expression = self.expression[startIndex:]
                 total = self.my_math.log10(self.expression)
             else:
                 # eval takes a string expression and evaluates it

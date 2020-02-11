@@ -6,8 +6,7 @@
 
 # import everything from tkinter module
 from tkinter import *
-import math
-from math import log
+from math import *
 
 
 # A global constant of sorts. The number of columns in the calculator
@@ -35,7 +34,7 @@ class Mathematics:
     def log10(self, expression):
         try:
             floatValue = float(expression)
-            result = math.log10(floatValue)
+            result = log10(floatValue)
         except:
             result = "error"
         return str(result)

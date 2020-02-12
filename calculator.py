@@ -9,7 +9,7 @@ from tkinter import *
 
 import tkinter.font as font  # added this
 from math import *
-
+import texteditor
 
 
 # A global constant of sorts. The number of columns in the calculator
@@ -32,7 +32,6 @@ class HelloWorld:
 class Mathematics:
     def basic(self, expression):
         return str(eval(expression))
-
 
     def log10(self, expression):
         try:
@@ -110,6 +109,9 @@ class Calculator:
 
         self.equation.set('')
 
+        # history of all calculations for session
+        self.history = []
+
         self.buttonList = [
 
             Button(self.master, text='save', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
@@ -170,6 +172,10 @@ class Calculator:
             Button(self.master, text='HW', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.my_hello.printMessage(self.equation),
                    width=7, height=1),
+            # EXAMPLE:  add helloworld button
+            Button(self.master, text='history', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.showHistory(),
+                   width=7, height=1),
 
             Button(self.master, text=' = ', fg=BTN_TXT_COLOR,
                    bg=BTN_BG_COLOR, command=self.equalpress, width=28, height=1,
@@ -218,15 +224,15 @@ class Calculator:
 
     # Function to update expressiom
     # in the text entry box
-    def press(self, num:str):
+    def press(self, num: str):
         # point out the global expression variable
         # global expression
 
-        #Refactoring for building operands
-        is_operand_data = num.isnumeric() or num == "negative"
-        is_operand_data = is_operand_data or num == "."
+        # Refactoring for building operands
+        is_operand_array = num.isnumeric() or num == "negative"
+        is_operand_array = is_operand_array or num == "."
 
-        if is_operand_data:
+        if is_operand_array:
             if self.operator is None:
                 self.set_operand(0, num)
             else:
@@ -253,7 +259,6 @@ class Calculator:
             self.equation.set(self.expression)
         else:
             self.displayError()
-
 
         """
         # concatenation of string
@@ -290,6 +295,8 @@ class Calculator:
 
         # Put that code inside the try block
         # which may generate the error
+        # hold expression to add to .txt
+
         try:
 
             # global expression
@@ -299,14 +306,23 @@ class Calculator:
             # into string
 
             if (self.Flag == "log"):  # example of implementing a function
-                startIndex = len("log")
+                #startIndex = len("log")
                 total = self.my_math.log10(self.expression)
-                self.expression = self.expression[startIndex:]
+                #self.expression = self.expression[startIndex:]
+
+                # needed to record equation and operator in calculationLog
+                self.expression = self.expression_field.get() + self.Flag
             else:
+                # saves equations entered via Entry box rather than buttons
+                self.expression = self.expression_field.get()
+
                 # eval takes a string expression and evaluates it
                 total = self.my_math.basic(self.expression_field.get())
 
             self.equation.set(total)
+
+            # save equations and answers to self.history list
+            self.saveHistory()
 
             self.previous_answer = total  # save result of operation to previous answer variable
             self.operands[0] = self.previous_answer
@@ -332,7 +348,6 @@ class Calculator:
         self.operands[1] = None
         self.operator = None
         self.clear_stack = not self.clear_stack  # logic for stack size
-
         self.expression = ""
         self.Flag = ""
         self.equation.set("")
@@ -361,13 +376,35 @@ class Calculator:
     def enterKey(self, event):
         self.equalpress()
 
+    # save expression and answer to self.history
+    def saveHistory(self):
+        self.history.append([self.expression, self.equation.get()])
 
-# Driver code
+    # write self.history to file
+    def calculationLog(self):
+        # create output file
+        out_file = open("calc_history.txt", "w")
+
+        # add elements in self.history to .txt file
+        for i in range(len(self.history)):
+            out_file.write(str(i+1) + ". " + "Equation: " +
+                           str(self.history[i][0]) + "   " + "Answer: " +
+                           str(self.history[i][1]) + ".\n")
+        out_file.close()
+
+    # opens calc_history.txt file using the systems default editor
+    def showHistory(self):
+        # write self.history to file
+        self.calculationLog()
+
+        # uses texteditor function to open file with default editor
+        texteditor.open(filename='calc_history.txt')
+
+
+        # Driver code
 if __name__ == "__main__":
     # create a GUI window
     root = Tk()
     root.geometry("300x300")
     my_gui = Calculator(root)
     root.mainloop()
-
-

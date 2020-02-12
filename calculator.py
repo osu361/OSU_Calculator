@@ -38,20 +38,78 @@ class Mathematics:
         try:
             floatValue = float(expression)
             result = log10(floatValue)
+            strVal = format("%8g"% (result))
         except:
             result = "error"
-        return str(result)
+        return strVal
 
 class UnitConversion:
 
+    # Convert from lbs to kg
     def toKg(self, expression):
         conversionFactor= 0.453592
         try:
             floatValue = float(expression)
             result = conversionFactor*floatValue
+            strVal = format("%8g"% (result))
         except:
             result = "error"
-        return str(result)
+        return strVal + " (kg)"
+
+    # Convert from kg to lbs
+    def toLbs(self, expression):
+        conversionFactor= 2.20462
+        try:
+            floatValue = float(expression)
+            result = conversionFactor*floatValue
+            strVal = format("%8g"% (result))
+        except:
+            result = "error"
+        return strVal + " (lbs)"
+
+    # Convert from from meters to feet
+    def toFt(self, expression):
+        conversionFactor= 3.28084
+        try:
+            floatValue = float(expression)
+            result = conversionFactor*floatValue
+            strVal = format("%8g"% (result))
+        except:
+            result = "error"
+        return strVal + " (ft)"
+
+    # Convert from from feet to meters
+    def toM(self, expression):
+        conversionFactor= 0.3048
+        try:
+            floatValue = float(expression)
+            result = conversionFactor*floatValue
+            strVal = format("%8g"% (result))
+        except:
+            result = "error"
+        return strVal + " (m)"
+
+    # Convert from from kilometers to miles
+    def toMi(self, expression):
+        conversionFactor= 0.621371
+        try:
+            floatValue = float(expression)
+            result = conversionFactor*floatValue
+            strVal = format("%8g"% (result))
+        except:
+            result = "error"
+        return strVal + " (mi)"
+
+    # Convert from from miles to kilometers
+    def toKm(self, expression):
+        conversionFactor= 1.60934
+        try:
+            floatValue = float(expression)
+            result = conversionFactor*floatValue
+            strVal = format("%8g"% (result))
+        except:
+            result = "error"
+        return strVal + " (km)"
         
 
 
@@ -124,7 +182,12 @@ class Calculator:
         self.previous_answer = None
 
         #buttons for unit conversion:
-        kg_button = "\u2192" + "Kg"
+        kg_button = "\u2b62" + " kg"
+        lbs_button = "\u2b62" + " lbs"
+        ft_button = "\u2b62" + " ft"
+        m_button = "\u2b62" + " m"
+        mi_button = "\u2b62" + " mi"
+        km_button = "\u2b62" + " km"
 
         self.equation.set('')
 
@@ -183,8 +246,19 @@ class Calculator:
                    command=lambda: self.setFlag("log"), width=7, height=1),
             Button(self.master, text=' + ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.press("+"), width=7, height=1),
+
             Button(self.master, text= kg_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.unitConvert("Kg"), width=7, height=1),
+            Button(self.master, text= lbs_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.unitConvert("Lbs"), width=7, height=1),
+            Button(self.master, text= ft_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.unitConvert("Ft"), width=7, height=1),
+            Button(self.master, text= m_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.unitConvert("M"), width=7, height=1),
+            Button(self.master, text= mi_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.unitConvert("Mi"), width=7, height=1),
+            Button(self.master, text= km_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.unitConvert("Km"), width=7, height=1),
 
             # EXAMPLE:  add helloworld button
             Button(self.master, text='HW', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
@@ -226,7 +300,9 @@ class Calculator:
         row += 1
         Grid.rowconfigure(self.master, row, weight=1)  # sticky
 
-        self.buttonList[index].grid(
+        print("length of button list = ", self.lengthOfbuttonList)
+        print("index= ", index)
+        self.buttonList[index-1].grid(
             row=row, column=0, columnspan=self.numColumns, sticky=(N, S, E, W))
 
         # listen for enter key
@@ -353,6 +429,21 @@ class Calculator:
             if (buttonName == "Kg"):
                 self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toKg(self.expression)
+            elif (buttonName == "Lbs"):
+                self.expression = self.my_math.basic(self.expression_field.get())
+                result = self.my_unitConvert.toLbs(self.expression)
+            elif (buttonName == "Ft"):
+                self.expression = self.my_math.basic(self.expression_field.get())
+                result = self.my_unitConvert.toFt(self.expression)
+            elif (buttonName == "M"):
+                self.expression = self.my_math.basic(self.expression_field.get())
+                result = self.my_unitConvert.toM(self.expression)
+            elif (buttonName == "Mi"):
+                self.expression = self.my_math.basic(self.expression_field.get())
+                result = self.my_unitConvert.toMi(self.expression)
+            elif (buttonName == "Km"):
+                self.expression = self.my_math.basic(self.expression_field.get())
+                result = self.my_unitConvert.toKm(self.expression)
             
             self.equation.set(result)
 

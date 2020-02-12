@@ -42,6 +42,18 @@ class Mathematics:
             result = "error"
         return str(result)
 
+class Conversion:
+
+    def toKg(self, expression):
+        conversionFactor= 0.453592
+        try:
+            floatValue = float(expression)
+            result = conversionFactor*floatValue
+        except:
+            result = "error"
+        return str(result)
+        
+
 
 class Calculator:
     def __init__(self, master):
@@ -60,6 +72,9 @@ class Calculator:
 
         # EXAMPLE: Create a HelloWorld class object to call the HelloWorld class functions
         self.my_hello = HelloWorld()
+
+        # Creat a Conversion class object to call the Conversion class functions
+        self.my_convert = Conversion()
 
         # set the title of GUI window
         self.master.title("Calculator")
@@ -107,6 +122,9 @@ class Calculator:
 
         self.saved_answer = None
         self.previous_answer = None
+
+        #buttons for unit conversion:
+        kg_button = "\u2192" + "Kg"
 
         self.equation.set('')
 
@@ -165,6 +183,8 @@ class Calculator:
                    command=lambda: self.setFlag("log"), width=7, height=1),
             Button(self.master, text=' + ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.press("+"), width=7, height=1),
+            Button(self.master, text= kg_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.convert("Kg"), width=7, height=1),
 
             # EXAMPLE:  add helloworld button
             Button(self.master, text='HW', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
@@ -300,8 +320,9 @@ class Calculator:
 
             if (self.Flag == "log"):  # example of implementing a function
                 startIndex = len("log")
+                self.expression = self.my_math.basic(self.expression_field.get())
                 total = self.my_math.log10(self.expression)
-                self.expression = self.expression[startIndex:]
+                #self.expression = self.expression[startIndex:]
             else:
                 # eval takes a string expression and evaluates it
                 total = self.my_math.basic(self.expression_field.get())
@@ -325,6 +346,28 @@ class Calculator:
 
     # Function to clear the contents
     # of text entry box
+
+    def convert(self, buttonName):
+
+        try:
+            if (buttonName == "Kg"):
+                self.expression = self.my_math.basic(self.expression_field.get())
+                print("buttonName= ", buttonName, " expression= ", self.expression)
+                result = self.my_convert.toKg(self.expression)
+            
+            self.equation.set(result)
+
+            self.previous_answer = result  # save result of operation to previous answer variable
+            self.operands[0] = self.previous_answer
+
+            # initialze the expression variable
+            # by empty string
+            self.expression = ""
+            self.Flag = ""
+            self.operator = None
+            self.operands[1] = None
+        except:
+            self.displayError()
 
     def clear(self):
         # global expression

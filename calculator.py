@@ -242,10 +242,13 @@ class Calculator:
                    command=lambda: self.press("."), width=7, height=1),
             Button(self.master, text=' 0 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.press('0'), width=7, height=1),
-            Button(self.master, text='log', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.setFlag("log"), width=7, height=1),
+            Button(self.master, text='E', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.press('E'), width=7, height=1),
             Button(self.master, text=' + ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.press("+"), width=7, height=1),
+
+            Button(self.master, text='log', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.setFlag("log"), width=7, height=1),
 
             Button(self.master, text= kg_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.unitConvert("Kg"), width=7, height=1),
@@ -284,7 +287,7 @@ class Calculator:
                     row=row, column=column, sticky=(N, S, E, W))  # sticky
                 # print("row= ",row, " column= ", column)
                 index += 1
-
+        print("after row-cols full index = ", index)
         row += 1
         column = 0
         Grid.rowconfigure(self.master, row, weight=1)  # sticky
@@ -302,7 +305,7 @@ class Calculator:
 
         print("length of button list = ", self.lengthOfbuttonList)
         print("index= ", index)
-        self.buttonList[index-1].grid(
+        self.buttonList[self.lengthOfbuttonList-1].grid(
             row=row, column=0, columnspan=self.numColumns, sticky=(N, S, E, W))
 
         # listen for enter key
@@ -321,6 +324,7 @@ class Calculator:
         #Refactoring for building operands
         is_operand_data = num.isnumeric() or num == "negative"
         is_operand_data = is_operand_data or num == "."
+        is_operand_data = is_operand_data or num == "E"
 
         if is_operand_data:
             if self.operator is None:
@@ -402,6 +406,9 @@ class Calculator:
             else:
                 # eval takes a string expression and evaluates it
                 total = self.my_math.basic(self.expression_field.get())
+                floatValue = float(total)
+                strVal = format("%8g"% (floatValue))
+                total = strVal.strip()
 
             self.equation.set(total)
 

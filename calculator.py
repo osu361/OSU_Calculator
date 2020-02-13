@@ -88,11 +88,12 @@ class Calculator:
         # in table like structure .
         self.expression_field.grid(columnspan=self.numColumns, ipadx=70)
 
-        # variables to save most recent result and user selected answer to save
+        # variables to save
         self.operands = [None, None]
         self.operator = None
         self.is_decimal = [False, False]
 
+        # variables to save most recent result and user selected answer to save
         self.clear_stack = False
 
         self.saved_answer = None

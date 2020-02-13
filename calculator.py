@@ -54,7 +54,7 @@ class UnitConversion:
             strVal = format("%8g"% (result))
         except:
             result = "error"
-        return strVal + " (kg)"
+        return strVal
 
     # Convert from kg to lbs
     def toLbs(self, expression):
@@ -65,7 +65,7 @@ class UnitConversion:
             strVal = format("%8g"% (result))
         except:
             result = "error"
-        return strVal + " (lbs)"
+        return strVal 
 
     # Convert from from meters to feet
     def toFt(self, expression):
@@ -76,7 +76,7 @@ class UnitConversion:
             strVal = format("%8g"% (result))
         except:
             result = "error"
-        return strVal + " (ft)"
+        return strVal 
 
     # Convert from from feet to meters
     def toM(self, expression):
@@ -87,7 +87,7 @@ class UnitConversion:
             strVal = format("%8g"% (result))
         except:
             result = "error"
-        return strVal + " (m)"
+        return strVal
 
     # Convert from from kilometers to miles
     def toMi(self, expression):
@@ -98,7 +98,7 @@ class UnitConversion:
             strVal = format("%8g"% (result))
         except:
             result = "error"
-        return strVal + " (mi)"
+        return strVal
 
     # Convert from from miles to kilometers
     def toKm(self, expression):
@@ -109,7 +109,7 @@ class UnitConversion:
             strVal = format("%8g"% (result))
         except:
             result = "error"
-        return strVal + " (km)"
+        return strVal 
         
 
 
@@ -429,23 +429,29 @@ class Calculator:
             if (buttonName == "Kg"):
                 self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toKg(self.expression)
+                self.equation.set(result + " (kg)" )
             elif (buttonName == "Lbs"):
                 self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toLbs(self.expression)
+                self.equation.set(result + " (lbs)")
             elif (buttonName == "Ft"):
                 self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toFt(self.expression)
+                self.equation.set(result + " (ft)")
             elif (buttonName == "M"):
                 self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toM(self.expression)
+                self.equation.set(result  + " (m)" )
             elif (buttonName == "Mi"):
                 self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toMi(self.expression)
+                self.equation.set(result  + " (mi)")
             elif (buttonName == "Km"):
                 self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toKm(self.expression)
+                self.equation.set(result + " (km)")
             
-            self.equation.set(result)
+            #self.equation.set(result)
 
             self.previous_answer = result  # save result of operation to previous answer variable
             self.operands[0] = self.previous_answer

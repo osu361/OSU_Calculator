@@ -79,14 +79,17 @@ class Calculator:
 
         # will hold the expression entered by the user
         self.expression = ""
+        self.display_txt = ""
 
         # for more information on tkinter variables see:
         # https://www.geeksforgeeks.org/python-setting-and-retrieving-values-of-tkinter-variable/
 
+
         # StringVar() is the variable class
         # we create an instance of this class
         # this holds a variable in a class from ktinker
-        self.equation = StringVar()
+        self.equation = StringVar() #TODO: replace w/ display_txt b/c name clearer
+
 
         # create the text entry box for
         # showing the expression .
@@ -215,10 +218,6 @@ class Calculator:
     # Function to update expressiom
     # in the text entry box
     def press(self, num:str):
-        if num == '=':
-            self.equalpress()
-            self.previous_press = num
-            return
         # point out the global expression variable
         # global expression
 
@@ -229,24 +228,30 @@ class Calculator:
         # Build operand string
         if is_operand_data:
             if self.operator is None:
-                if self.previous_press == '=':
-                    self.operands[0] = None
                 self.set_operand(0, num)
             else:
                 self.set_operand(1, num)
 
         elif num in OPERATOR_LIST['urnary'] or num in OPERATOR_LIST['binary']:
-            if num in OPERATOR_LIST['urnary'] or self.operator is not None:
-
-                self.equalpress()
-            self.set_operator(num)
-            if num in OPERATOR_LIST['urnary']:
-               self.equalpress()
+            if self.previous_answer is not None or self.operands[0] is not None:
+                if self.operands[0] is None:
+                    self.operands[0] = self.previous_answer
+                # If urnary or previous equation to solve, solve equation and
+                # store answer in operands[0]
+                if num in OPERATOR_LIST['urnary'] or self.operator is not None:
+                    self.equalpress()
+                    self.operands[0] = self.previous_answer
+                self.set_operator(num)
+                # if operator is urnary, evaluate function.
+                if num in OPERATOR_LIST['urnary']:
+                   self.equalpress()
+            else:
+                self.displayError()
 
         else:
             self.displayError()
 
-        self.previous_press = num
+
             # concatenation of string
         self.expression = self.expression + str(num)
 
@@ -276,7 +281,7 @@ class Calculator:
         else:
             self.displayError()
 
-        self.previous_press = num
+   
 
         """
         # concatenation of string
@@ -334,6 +339,7 @@ class Calculator:
             # by empty string
             self.expression = ""
             self.Flag = ""
+            self.operands[0] = None
             self.operator = None
             self.operands[1] = None
 
@@ -341,6 +347,8 @@ class Calculator:
             # by the except block
         except:
             self.displayError()
+
+
 
     '''                    
             if (self.Flag == "log"):  # example of implementing a function

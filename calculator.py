@@ -216,7 +216,7 @@ class Calculator:
         self.Flag = flag
         self.press(flag)
 
-    # Function to update expressiom
+    # Function to update expression
     # in the text entry box
     def press(self, num:str):
         # point out the global expression variable

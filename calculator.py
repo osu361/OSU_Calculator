@@ -314,6 +314,8 @@ class Calculator:
 
         # Put that code inside the try block
         # which may generate the error
+        #self.expression_field = self.fixZeros(self.expression_field.get())
+        exp = self.fixZeros(self.expression_field.get())
         try:
 
             # global expression
@@ -323,11 +325,13 @@ class Calculator:
             # into string
 
             if self.Flag == "log" and not ignore_flag:  # example of implementing a function
-                total = self.my_math.log10(self.expression_field.get())
+                #total = self.my_math.log10(self.expression_field.get())
+                total = self.my_math.log10(exp)
                 self.Flag = ""
             else:
                 # eval takes a string expression and evaluates it
-                total = self.my_math.basic(self.expression_field.get())
+                #total = self.my_math.basic(self.expression_field.get())
+                total = self.my_math.basic(exp)
 
             self.equation.set(total)
 
@@ -384,13 +388,28 @@ class Calculator:
     def enterKey(self, event):
         self.equalpress()
 
+    # fix leading zeros
+    def fixZeros(self, s):
+        s = list(s)
+        i = 0
+        while i < len(s):
+            if i == 0:
+                if s[i] == '0':
+                    s.pop(i)
+                    i -= 1
+            elif i == len(s)-1:
+                break
+            elif s[i] == '0' and not s[i-1].isdigit() and s[i+1].isdigit():
+                s.pop(i)
+                i -= 1
+            i += 1
 
-# Driver code
+        return "".join(s)
+
+        # Driver code
 if __name__ == "__main__":
     # create a GUI window
     root = Tk()
     root.geometry("300x300")
     my_gui = Calculator(root)
     root.mainloop()
-
-

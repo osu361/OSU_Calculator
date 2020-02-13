@@ -1,0 +1,4 @@
+1. Equation: 23**2   Answer: 529.
+2. Equation: 529-65   Answer: 464.
+3. Equation: 6*3   Answer: 18.
+4. Equation: 59-54   Answer: 5.

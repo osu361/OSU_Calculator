@@ -98,13 +98,15 @@ class Calculator:
         # in table like structure .
         self.expression_field.grid(columnspan=self.numColumns, ipadx=70)
 
-        # variables to save most recent result and user selected answer to save
+        # variables to save user entered operands/operator
         self.operands = [None, None]
         self.operator = None
+        # Flag used to prohibit user from using two decimals in one number
         self.is_decimal = [False, False]
 
         self.clear_stack = False
-
+        
+        # Variables used to save answer
         self.saved_answer = None
         self.previous_answer = None
 

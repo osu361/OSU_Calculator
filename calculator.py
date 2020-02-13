@@ -14,6 +14,7 @@ NUM_COLUMNS = 4
 BTN_BG_COLOR = "red"
 BTN_TXT_COLOR = "black"
 CALC_BG_COLOR = "light green"
+OPERATOR_LIST = {'urnary':['log'], 'binary':['+', '-', '*', '/']}
 
 # EXAMPLE: class helloworld
 
@@ -38,6 +39,14 @@ class Mathematics:
         except:
             result = "error"
         return str(result)
+
+def math_eval(operands, operator):
+    if operator in OPERATOR_LIST['urnary']:
+        if operator == 'log':
+            return Mathematics.log10(operands[0])
+    else:
+        return Mathematics.basic((operands[0]+operator+operands[1]))
+
 
 
 class Calculator:
@@ -92,6 +101,7 @@ class Calculator:
         self.operands = [None, None]
         self.operator = None
         self.is_decimal = [False, False]
+        self.previous_press = ''
 
         # variables to save most recent result and user selected answer to save
         self.clear_stack = False
@@ -161,8 +171,8 @@ class Calculator:
             Button(self.master, text='HW', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.my_hello.printMessage(self.equation),
                    width=7, height=1),
 
-            Button(self.master, text=' = ', fg=BTN_TXT_COLOR,
-                   bg=BTN_BG_COLOR, command=self.equalpress, width=28, height=1),
+            Button(self.master, text=' = ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command = lambda: self.equalpress(True), width=28, height=1),
         ]
 
         self.lengthOfbuttonList = len(self.buttonList)
@@ -205,19 +215,45 @@ class Calculator:
     # Function to update expressiom
     # in the text entry box
     def press(self, num:str):
+        if num == '=':
+            self.equalpress()
+            self.previous_press = num
+            return
         # point out the global expression variable
         # global expression
 
-        #Refactoring for building operands
+        # Determine if user has pressed an operand button
         is_operand_data = num.isnumeric() or num == "negative"
         is_operand_data = is_operand_data or num == "."
 
+        # Build operand string
         if is_operand_data:
             if self.operator is None:
+                if self.previous_press == '=':
+                    self.operands[0] = None
                 self.set_operand(0, num)
             else:
                 self.set_operand(1, num)
 
+        elif num in OPERATOR_LIST['urnary'] or num in OPERATOR_LIST['binary']:
+            if num in OPERATOR_LIST['urnary'] or self.operator is not None:
+
+                self.equalpress()
+            self.set_operator(num)
+            if num in OPERATOR_LIST['urnary']:
+               self.equalpress()
+
+        else:
+            self.displayError()
+
+        self.previous_press = num
+            # concatenation of string
+        self.expression = self.expression + str(num)
+
+        # update the expression by using set method
+        self.equation.set(self.expression)
+    '''
+        
         elif self.Flag is not None or num in "*+-/":
             if self.operator is not None:
                 self.equalpress()
@@ -240,6 +276,7 @@ class Calculator:
         else:
             self.displayError()
 
+        self.previous_press = num
 
         """
         # concatenation of string
@@ -248,7 +285,8 @@ class Calculator:
         # update the expression by using set method
         self.equation.set(self.expression)
         """
-
+    '''
+    #Builds operand
     def set_operand(self, idx, num):
 
         if num != "." or not self.is_decimal[idx]:
@@ -270,7 +308,7 @@ class Calculator:
 
     # Function to evaluate the final expression
 
-    def equalpress(self):
+    def equalpress(self, equalbtn = False):
         # Try and except statement is used
         # for handling the errors like zero
         # division error etc.
@@ -284,7 +322,27 @@ class Calculator:
             # eval function evaluate the expression
             # and str function convert the result
             # into string
+            if self.operator is not None:
+               total = math_eval(self.operands, self.operator)
 
+
+            self.equation.set(total)
+            self.previous_answer = total
+
+
+            # initialze the expression variable
+            # by empty string
+            self.expression = ""
+            self.Flag = ""
+            self.operator = None
+            self.operands[1] = None
+
+            # if error is generate then handle
+            # by the except block
+        except:
+            self.displayError()
+
+    '''                    
             if (self.Flag == "log"):  # example of implementing a function
                 self.expression = self.my_math.basic(self.expression)
                 total = self.my_math.log10(self.expression)
@@ -308,7 +366,7 @@ class Calculator:
         # by the except block
         except:
             self.displayError()
-
+    '''
     # Function to clear the contents
     # of text entry box
 

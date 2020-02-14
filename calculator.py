@@ -112,7 +112,17 @@ class Calculator:
         # history of all calculations for session
         self.history = []
 
+        Grid.rowconfigure(self.master, 1, weight=1)
+        Button(self.master, text='use', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+               command=self.useLog, width=7, height=1).grid(
+            row=1, column=2, sticky=(N, S, E, W))
+
+        Button(self.master, text='hist', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+               command=self.showHistory, width=7, height=1).grid(
+            row=1, column=3, sticky=(N, S, E, W))
+
         self.buttonList = [
+
 
             Button(self.master, text='save', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.saveAnswer(), width=7, height=1),
@@ -173,8 +183,8 @@ class Calculator:
                    command=lambda: self.my_hello.printMessage(self.equation),
                    width=7, height=1),
             # EXAMPLE:  add helloworld button
-            Button(self.master, text='history', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.showHistory(),
+            Button(self.master, text='', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=None,
                    width=7, height=1),
 
             Button(self.master, text=' = ', fg=BTN_TXT_COLOR,
@@ -185,10 +195,10 @@ class Calculator:
         self.lengthOfbuttonList = len(self.buttonList)
 
         # row number starts from 1 since row 0 is for the display
-        self.numRows = self.lengthOfbuttonList//self.numColumns + 1
+        self.numRows = self.lengthOfbuttonList//self.numColumns + 2
 
         index = 0
-        for row in range(1, self.numRows):
+        for row in range(2, self.numRows):
             Grid.rowconfigure(self.master, row, weight=1)  # sticky
             for column in range(self.numColumns):
                 Grid.columnconfigure(self.master, column, weight=1)  # sticky
@@ -306,9 +316,9 @@ class Calculator:
             # into string
 
             if (self.Flag == "log"):  # example of implementing a function
-                #startIndex = len("log")
+                # startIndex = len("log")
                 total = self.my_math.log10(self.expression)
-                #self.expression = self.expression[startIndex:]
+                # self.expression = self.expression[startIndex:]
 
                 # needed to record equation and operator in calculationLog
                 self.expression = self.expression_field.get() + self.Flag
@@ -323,6 +333,7 @@ class Calculator:
 
             # save equations and answers to self.history list
             self.saveHistory()
+            self.dropDown()
 
             self.previous_answer = total  # save result of operation to previous answer variable
             self.operands[0] = self.previous_answer
@@ -378,18 +389,19 @@ class Calculator:
 
     # save expression and answer to self.history
     def saveHistory(self):
-        self.history.append([self.expression, self.equation.get()])
+        # self.dropDown()
+        if self.expression != self.equation.get():
+            self.history.append(self.expression + "=" + self.equation.get())
 
     # write self.history to file
+
     def calculationLog(self):
         # create output file
         out_file = open("calc_history.txt", "w")
 
         # add elements in self.history to .txt file
         for i in range(len(self.history)):
-            out_file.write(str(i+1) + ". " + "Equation: " +
-                           str(self.history[i][0]) + "   " + "Answer: " +
-                           str(self.history[i][1]) + ".\n")
+            out_file.write(self.history[i] + '.\n')
         out_file.close()
 
     # opens calc_history.txt file using the systems default editor
@@ -400,6 +412,20 @@ class Calculator:
         # uses texteditor function to open file with default editor
         texteditor.open(filename='calc_history.txt')
 
+    def dropDown(self, *args):
+        self.options = self.history
+        self.variable = StringVar(self.master)
+        self.variable.set(self.options[-1])  # default value
+        b5 = OptionMenu(self.master, self.variable, *self.options)
+        b5.config(font=self.buttonFont, width=10)
+        b5.grid(row=1, column=0, columnspan=2, sticky=(N, S, E, W))
+
+    def useLog(self):
+        self.clear()
+        eq = self.variable.get().split('=')[1]
+        self.expression = eq
+        self.equation.set(eq)
+        self.equalpress()
 
         # Driver code
 if __name__ == "__main__":

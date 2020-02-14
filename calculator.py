@@ -396,12 +396,12 @@ class Calculator:
         i = 0
         while True:
             if i == 0:
-                if s[i] is '0' and s[i+1].isdigit():
+                if s[i] == '0' and s[i+1].isdigit():
                     s.pop(i)
                     i -= 1
             elif i == len(s)-1:
                 break
-            elif s[i] is '0' and not s[i-1].isdigit() and s[i+1].isdigit():
+            elif s[i] == '0' and not s[i-1].isdigit() and s[i+1].isdigit():
                 s.pop(i)
                 i -= 1
             i += 1

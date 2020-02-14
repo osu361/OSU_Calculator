@@ -315,7 +315,9 @@ class Calculator:
         # Put that code inside the try block
         # which may generate the error
         #self.expression_field = self.fixZeros(self.expression_field.get())
-        exp = self.fixZeros(self.expression_field.get())
+
+        # removes leading zeros
+        expFiltered = self.fixZeros(self.expression_field.get())
         try:
 
             # global expression
@@ -326,12 +328,12 @@ class Calculator:
 
             if self.Flag == "log" and not ignore_flag:  # example of implementing a function
                 #total = self.my_math.log10(self.expression_field.get())
-                total = self.my_math.log10(exp)
+                total = self.my_math.log10(expFiltered)
                 self.Flag = ""
             else:
                 # eval takes a string expression and evaluates it
                 #total = self.my_math.basic(self.expression_field.get())
-                total = self.my_math.basic(exp)
+                total = self.my_math.basic(expFiltered)
 
             self.equation.set(total)
 
@@ -388,18 +390,18 @@ class Calculator:
     def enterKey(self, event):
         self.equalpress()
 
-    # fix leading zeros
+    # removes leading zeros
     def fixZeros(self, s):
         s = list(s)
         i = 0
         while i < len(s):
             if i == 0:
-                if s[i] == '0':
+                if s[i] is '0' and s[i+1].isdigit():
                     s.pop(i)
                     i -= 1
             elif i == len(s)-1:
                 break
-            elif s[i] == '0' and not s[i-1].isdigit() and s[i+1].isdigit():
+            elif s[i] is '0' and not s[i-1].isdigit() and s[i+1].isdigit():
                 s.pop(i)
                 i -= 1
             i += 1

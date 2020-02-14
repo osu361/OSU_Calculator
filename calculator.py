@@ -101,7 +101,9 @@ class Calculator:
         # grid method is used for placing
         # the widgets at respective positions
         # in table like structure .
-        self.expression_field.grid(columnspan=self.numColumns, ipadx=70)
+        Grid.rowconfigure(self.master, 1, weight=1)
+        self.expression_field.grid(
+            columnspan=self.numColumns, ipadx=70, sticky=(N, S, E, W))
 
         # variables to save user entered operands/operator
         self.operands = [None, None]
@@ -119,9 +121,11 @@ class Calculator:
         # history of all calculations for session
         self.history = []
 
+        self.calculationLog()
+
         Grid.rowconfigure(self.master, 1, weight=1)
-        Label(self.master, text="calculation log").grid(row=1, column=0,
-                                                        columnspan=2, sticky=(N, S, E, W))
+        # Label(self.master, text="calculation log").grid(row=1, column=0,
+        #                                                 columnspan=2, sticky=(N, S, E, W))
         Button(self.master, text='<--use', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                command=self.useLog, width=7, height=1).grid(
             row=1, column=2, sticky=(N, S, E, W))
@@ -358,7 +362,7 @@ class Calculator:
 
             # save equations and answers to self.history list
             self.saveHistory()
-            self.dropDown()
+            self.calculationLog()
 
             self.previous_answer = total  # save result of operation to previous answer variable
             self.operands[0] = self.previous_answer
@@ -438,7 +442,7 @@ class Calculator:
 
     # write self.history to file
 
-    def calculationLog(self):
+    def history2Txt(self):
         # create output file
         out_file = open("calc_history.txt", "w")
 
@@ -450,13 +454,16 @@ class Calculator:
     # opens calc_history.txt file using the systems default editor
     def showHistory(self):
         # write self.history to file
-        self.calculationLog()
+        self.history2Txt()
 
         # uses texteditor function to open file with default editor
         texteditor.open(filename='calc_history.txt')
 
-    def dropDown(self, *args):
-        self.options = self.history
+    def calculationLog(self, *args):
+        if not self.history:
+            self.options = ['Calculation Log']
+        else:
+            self.options = self.history
         self.variable = StringVar(self.master)
         self.variable.set(self.options[-1])  # default value
         b5 = OptionMenu(self.master, self.variable, *self.options)
@@ -469,7 +476,6 @@ class Calculator:
         self.expression = eq
         self.equation.set(eq)
         self.equalpress()
-
 
         # Driver code
 if __name__ == "__main__":

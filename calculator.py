@@ -422,7 +422,7 @@ class Calculator:
                 if s[i] == '0' and s[i+1].isdigit():
                     s.pop(i)
                     i -= 1
-            elif i == len(s)-1:
+            elif i == len(s)-1 or len(s) < 3:
                 break
             elif s[i] == '0' and not s[i-1].isdigit() and s[i+1].isdigit():
                 s.pop(i)

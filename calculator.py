@@ -394,7 +394,7 @@ class Calculator:
     def fixZeros(self, s):
         s = list(s)
         i = 0
-        while i < len(s):
+        while True:
             if i == 0:
                 if s[i] is '0' and s[i+1].isdigit():
                     s.pop(i)

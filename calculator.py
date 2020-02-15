@@ -34,7 +34,6 @@ class Mathematics:
     def basic(self, expression):
         return str(eval(expression))
 
-
     def log10(self, expression):
         try:
             floatValue = float(expression)

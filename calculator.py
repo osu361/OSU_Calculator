@@ -19,8 +19,6 @@ BTN_TXT_COLOR = "black"
 CALC_BG_COLOR = "light green"
 
 # EXAMPLE: class helloworld
-
-
 class HelloWorld:
     def __init__(self):
         self.message = "Hello World!"

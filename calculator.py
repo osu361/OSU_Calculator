@@ -34,6 +34,7 @@ class Mathematics:
     def basic(self, expression):
         return str(eval(expression))
 
+
     def log10(self, expression):
         try:
             floatValue = float(expression)
@@ -149,7 +150,7 @@ class Calculator:
                    command=lambda: self.press('('), width=7, height=1),
             Button(self.master, text=' ) ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.press(')'), width=7, height=1),
-            Button(self.master, text=' UNDO ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+            Button(self.master, text=' UNDO ',  fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.setFlag('UNDO'), width=7, height=1),
             Button(self.master, text=' REDO ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.setFlag('REDO'), width=7, height=1),
@@ -311,7 +312,7 @@ class Calculator:
     def set_operand(self, idx, num):
 
         if num != "." or not self.is_decimal[idx]:
-            if self.operands[idx] is None:
+            if self.operands[idx] is None:  # TODO op[0] == 0
                 # TODO Load/update current val of operand
                 self.operands[idx] = num
             else:
@@ -374,7 +375,6 @@ class Calculator:
 
             # initialze the expression variable
             # by empty string
-            # self.expression = total
             self.operands[0] = None
             self.operator = None
             self.operands[1] = None
@@ -482,7 +482,7 @@ class Calculator:
         self.equation.set(eq)
         self.equalpress()
 
-        # Driver code
+# Driver code
 if __name__ == "__main__":
     # create a GUI window
     root = Tk()

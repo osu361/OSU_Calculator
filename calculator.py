@@ -111,9 +111,55 @@ class UnitConversion:
             result = "error"
         return strVal 
     
-    # def funcname(self, parameter_list):
-    #     pass
+    def toFdeg(self, expression):
+         
+        try:
+            res = (float(expression) - 32) * 1.8
+            strVal = format("%8g"% (res))
+        except:
+            res = "error"
+        return strVal
         
+    
+    def toCdeg(self, expression):
+        try:
+            res = float(expression) * 1.8 + 32
+            strVal = format("%8g"% (res))
+        except:
+            res = "error"
+        return strVal
+    
+    def toLiter(self, expression):
+        try:
+            res = float(expression) * 3.78541
+            strVal = format("%8g"% (res))
+        except:
+            res = "error"
+        return strVal
+        
+    def toGal(self, expression):
+        try:
+            res = float(expression) / 3.78541
+            strVal = format("%8g"% (res))
+        except:
+            res = "error"
+        return strVal
+
+    def toCm(self, expression):
+        try:
+            res = float(expression) * 2.54
+            strVal = format("%8g"% (res))
+        except:
+            res = "error"
+        return strVal
+
+    def toIn(self, expression):
+        try:
+            res = float(expression) / 2.54
+            strVal = format("%8g"% (res))
+        except:
+            res = "error"
+        return strVal
 
 
 class Calculator:
@@ -481,6 +527,34 @@ class Calculator:
                 result = self.my_unitConvert.toKm(self.expression)
                 self.equation.set(result + " (km)")
             
+            elif (buttonName == "fDeg"):
+                self.expression = self.my_math.basic(self.expression_field.get())
+                result = self.my_unitConvert.toFdeg(self.expression)
+                self.equation.set(result + " (\u2b62 \u00B0" + "F)")
+            elif (buttonName == "cDeg"):
+                self.expression = self.my_math.basic(self.expression_field.get())
+                result = self.my_unitConvert.toCdeg(self.expression)
+                self.equation.set(result + " (\u2b62 \u00B0" + "C)")    
+            
+            elif (buttonName == "liter"):
+                self.expression = self.my_math.basic(self.expression_field.get())
+                result = self.my_unitConvert.toLiter(self.expression)
+                self.equation.set(result + " (L)")
+            elif (buttonName == "gal"):
+                self.expression = self.my_math.basic(self.expression_field.get())
+                result = self.my_unitConvert.toGal(self.expression)
+                self.equation.set(result + " (gal)")   
+            
+            elif (buttonName == "cm"):
+                self.expression = self.my_math.basic(self.expression_field.get())
+                result = self.my_unitConvert.toCm(self.expression)
+                self.equation.set(result + " (cm)")
+            elif (buttonName == "in"):
+                self.expression = self.my_math.basic(self.expression_field.get())
+                result = self.my_unitConvert.toIn(self.expression)
+                self.equation.set(result + " (in)")    
+                
+                
             #self.equation.set(result)
 
             self.previous_answer = result  # save result of operation to previous answer variable

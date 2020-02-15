@@ -11,9 +11,11 @@ from math import *
 
 # A global constant of sorts. The number of columns in the calculator
 NUM_COLUMNS = 4
-BTN_BG_COLOR = "red"
-BTN_TXT_COLOR = "black"
-CALC_BG_COLOR = "light green"
+BTN_BG_COLOR = "black"
+BTN_TXT_COLOR = "light gray"
+CALC_BG_COLOR = "black"
+OPERATOR_LIST = {"urnary": ["log"], "binary": ["+", "-", "*", "/"]}
+
 
 # EXAMPLE: class helloworld
 
@@ -29,7 +31,6 @@ class HelloWorld:
 class Mathematics:
     def basic(self, expression):
         return str(eval(expression))
-
 
     def log10(self, expression):
         try:
@@ -70,6 +71,7 @@ class Calculator:
 
         # will hold the expression entered by the user
         self.expression = ""
+        self.display_text = ""
 
         # for more information on tkinter variables see:
         # https://www.geeksforgeeks.org/python-setting-and-retrieving-values-of-tkinter-variable/
@@ -91,10 +93,12 @@ class Calculator:
         # variables to save most recent result and user selected answer to save
         self.operands = [None, None]
         self.operator = None
+        # Flag used to prohibit user from using two decimals in one number
         self.is_decimal = [False, False]
 
         self.clear_stack = False
 
+        # Variables used to save answer
         self.saved_answer = None
         self.previous_answer = None
 
@@ -115,7 +119,7 @@ class Calculator:
                    command=lambda: self.press('('), width=7, height=1),
             Button(self.master, text=' ) ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.press(')'), width=7, height=1),
-            Button(self.master, text=' UNDO ',  fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+            Button(self.master, text=' UNDO ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.setFlag('UNDO'), width=7, height=1),
             Button(self.master, text=' REDO ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.setFlag('REDO'), width=7, height=1),
@@ -124,7 +128,7 @@ class Calculator:
                    command=lambda: self.press('7'), width=7, height=1),
             Button(self.master, text=' 8 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.press('8'), width=7, height=1),
-            Button(self.master, text=' 9 ',  fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+            Button(self.master, text=' 9 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.press('9'), width=7, height=1),
             Button(self.master, text=u"\u00F7", fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.press("/"), width=7, height=1),
@@ -157,17 +161,19 @@ class Calculator:
                    command=lambda: self.press("+"), width=7, height=1),
 
             # EXAMPLE:  add helloworld button
-            Button(self.master, text='HW', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR, command=lambda: self.my_hello.printMessage(self.equation),
+            Button(self.master, text='HW', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.my_hello.printMessage(self.equation),
                    width=7, height=1),
 
             Button(self.master, text=' = ', fg=BTN_TXT_COLOR,
-                   bg=BTN_BG_COLOR, command=self.equalpress, width=28, height=1),
+                   bg=BTN_BG_COLOR, command=self.equalpress, width=28, height=1,
+                   font=self.buttonFont),
         ]
 
         self.lengthOfbuttonList = len(self.buttonList)
 
         # row number starts from 1 since row 0 is for the display
-        self.numRows = self.lengthOfbuttonList//self.numColumns + 1
+        self.numRows = self.lengthOfbuttonList // self.numColumns + 1
 
         index = 0
         for row in range(1, self.numRows):
@@ -183,7 +189,7 @@ class Calculator:
         column = 0
         Grid.rowconfigure(self.master, row, weight=1)  # sticky
 
-        for i in range(index, self.lengthOfbuttonList-1):
+        for i in range(index, self.lengthOfbuttonList - 1):
             self.buttonList[index].grid(
                 row=row, column=column, sticky=(N, S, E, W))  # sticky
             # print("row= ",row, " column= ", column)
@@ -197,17 +203,20 @@ class Calculator:
         self.buttonList[index].grid(
             row=row, column=0, columnspan=self.numColumns, sticky=(N, S, E, W))
 
+        # listen for enter key
+        self.master.bind('<Return>', self.enterKey)
+
     def setFlag(self, flag):
         self.Flag = flag
         self.press(flag)
 
-    # Function to update expressiom
+    # Function to update expression
     # in the text entry box
-    def press(self, num:str):
+    def press(self, num: str):
         # point out the global expression variable
         # global expression
 
-        #Refactoring for building operands
+        # Refactoring for building operands
         is_operand_data = num.isnumeric() or num == "negative"
         is_operand_data = is_operand_data or num == "."
 
@@ -217,41 +226,63 @@ class Calculator:
             else:
                 self.set_operand(1, num)
 
-        elif self.Flag is not None or num in "*+-/":
-            if self.operator is not None:
-                self.equalpress()
+        elif num in OPERATOR_LIST["urnary"]:
+            self.eval_existing_expression("urnary", num)
 
-            if self.operands[0] is not None:
-                self.set_operator(num)
-                if self.operator == "log":
-                    self.equalpress()
+        elif num in OPERATOR_LIST["binary"]:
+            self.eval_existing_expression("binary", num)
 
         else:
             self.displayError()
 
-        if self.operands[0] is not None:
-            self.expression = self.operands[0]
-            if self.operator is not None:
-                self.expression += self.operator
-                if self.operands[1] is not None:
-                    self.expression += self.operands[1]
-            self.equation.set(self.expression)
-        else:
-            self.displayError()
-
+        self.build_display_text()
 
         """
         # concatenation of string
-        self.expression = self.expression + str(num)
+        self.expression += str(num)
 
         # update the expression by using set method
         self.equation.set(self.expression)
         """
 
+    def build_display_text(self):
+        if self.operands[0] is not None:
+            self.display_text = self.operands[0]
+            if self.operator is not None:
+                self.display_text += self.operator
+                if self.operands[1] is not None:
+                    self.display_text += self.operands[1]
+            self.equation.set(self.display_text)
+        elif self.previous_answer is not None:
+            self.display_text = self.previous_answer
+            self.equation.set(self.display_text)
+        else:
+            self.displayError()
+
+    def eval_existing_expression(self, operator_type, operator):
+        if self.operands[1] is not None:
+            # TODO load OP[0] operator and OP[1] flag for second add
+            self.equalpress(operator_type != "binary")
+            self.operands[0] = self.previous_answer
+
+        if self.operands[0] is None and self.previous_answer is not None:
+            self.operands[0] = self.previous_answer
+
+        if self.operands[0] is not None:
+            # TODO load operator
+            if operator_type == "urnary":
+                # TODO and if not flag load OP[0]
+                self.equalpress()
+            else:
+                self.set_operator(operator)
+        else:
+            self.displayError()
+
     def set_operand(self, idx, num):
 
         if num != "." or not self.is_decimal[idx]:
-            if self.operands[idx] is None:
+            if self.operands[idx] is None:  # TODO op[0] == 0
+                # TODO Load/update current val of operand
                 self.operands[idx] = num
             else:
                 if num == "negative":
@@ -268,8 +299,7 @@ class Calculator:
         self.operator = operator
 
     # Function to evaluate the final expression
-
-    def equalpress(self):
+    def equalpress(self, ignore_flag=False):
         # Try and except statement is used
         # for handling the errors like zero
         # division error etc.
@@ -284,11 +314,12 @@ class Calculator:
             # and str function convert the result
             # into string
 
-            if (self.Flag == "log"):  # example of implementing a function
-                total = self.my_math.log10(self.expression)
+            if self.Flag == "log" and not ignore_flag:  # example of implementing a function
+                total = self.my_math.log10(self.expression_field.get())
+                self.Flag = ""
             else:
                 # eval takes a string expression and evaluates it
-                total = self.my_math.basic(self.expression)
+                total = self.my_math.basic(self.expression_field.get())
 
             self.equation.set(total)
 
@@ -297,8 +328,7 @@ class Calculator:
 
             # initialze the expression variable
             # by empty string
-            self.expression = ""
-            self.Flag = ""
+            self.operands[0] = None
             self.operator = None
             self.operands[1] = None
 
@@ -341,6 +371,9 @@ class Calculator:
     def displayError(self, msg=" error "):
         self.equation.set(" error ")
         self.expression = ""
+
+    def enterKey(self, event):
+        self.equalpress()
 
 
 # Driver code

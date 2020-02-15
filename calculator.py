@@ -482,7 +482,7 @@ class Calculator:
         self.equation.set(eq)
         self.equalpress()
 
-# Driver code
+        # Driver code
 if __name__ == "__main__":
     # create a GUI window
     root = Tk()

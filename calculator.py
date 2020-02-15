@@ -19,8 +19,6 @@ BTN_TXT_COLOR = "black"
 CALC_BG_COLOR = "light green"
 
 # EXAMPLE: class helloworld
-
-
 class HelloWorld:
     def __init__(self):
         self.message = "Hello World!"
@@ -110,7 +108,60 @@ class UnitConversion:
         except:
             result = "error"
         return strVal 
-        
+    
+    # convert Celsius to Fahrenheit
+    def toFdeg(self, expression):
+        try:
+            res = (float(expression) * 1.8) + 32
+            strVal = format("%8g"% (res))
+        except:
+            res = "error"
+        return strVal
+    
+    # convert Fahrenheit to Celsius
+    def toCdeg(self, expression):
+        try:
+            res = (float(expression) - 32) * (5/9)
+            strVal = format("%8g"% (res))
+        except:
+            res = "error"
+        return strVal
+    
+    # convert Gallon to Liter
+    def toLiter(self, expression):
+        try:
+            res = float(expression) * 3.78541
+            strVal = format("%8g"% (res))
+        except:
+            res = "error"
+        return strVal
+    
+    # convert Liter to Gallon
+    def toGal(self, expression):
+        try:
+            res = float(expression) / 3.78541
+            strVal = format("%8g"% (res))
+        except:
+            res = "error"
+        return strVal
+
+    # convert Inch to Centimeter
+    def toCm(self, expression):
+        try:
+            res = float(expression) * 2.54
+            strVal = format("%8g"% (res))
+        except:
+            res = "error"
+        return strVal
+
+    # convert Centimeter to 
+    def toIn(self, expression):
+        try:
+            res = float(expression) / 2.54
+            strVal = format("%8g"% (res))
+        except:
+            res = "error"
+        return strVal
 
 
 class Calculator:
@@ -171,13 +222,15 @@ class Calculator:
         # in table like structure .
         self.expression_field.grid(columnspan=self.numColumns, ipadx=70)
 
-        # variables to save most recent result and user selected answer to save
+        # variables to save user entered operands/operator
         self.operands = [None, None]
         self.operator = None
+        # Flag used to prohibit user from using two decimals in one number
         self.is_decimal = [False, False]
 
         self.clear_stack = False
-
+        
+        # Variables used to save answer
         self.saved_answer = None
         self.previous_answer = None
 
@@ -188,6 +241,13 @@ class Calculator:
         m_button = "\u2b62" + " m"
         mi_button = "\u2b62" + " mi"
         km_button = "\u2b62" + " km"
+        
+        cDeg_button = "\u2b62 \u00B0" + "C"
+        fDeg_button = "\u2b62 \u00B0" + "F"
+        liter_button = "\u2b62" + " L"
+        gal_button = "\u2b62" + " gal"
+        in_button = "\u2b62" + " in"
+        cm_button = "\u2b62" + " cm"
 
         self.equation.set('')
 
@@ -262,6 +322,19 @@ class Calculator:
                    command=lambda: self.unitConvert("Mi"), width=7, height=1),
             Button(self.master, text= km_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.unitConvert("Km"), width=7, height=1),
+            
+            Button(self.master, text= cDeg_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.unitConvert("cDeg"), width=7, height=1),
+            Button(self.master, text= fDeg_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.unitConvert("fDeg"), width=7, height=1),
+            Button(self.master, text= liter_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.unitConvert("liter"), width=7, height=1),
+            Button(self.master, text= gal_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.unitConvert("gal"), width=7, height=1),
+            Button(self.master, text= cm_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.unitConvert("cm"), width=7, height=1),
+            Button(self.master, text= in_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.unitConvert("in"), width=7, height=1),
 
             # EXAMPLE:  add helloworld button
             Button(self.master, text='HW', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
@@ -315,7 +388,7 @@ class Calculator:
         self.Flag = flag
         self.press(flag)
 
-    # Function to update expressiom
+    # Function to update expression
     # in the text entry box
     def press(self, num:str):
         # point out the global expression variable
@@ -458,6 +531,34 @@ class Calculator:
                 result = self.my_unitConvert.toKm(self.expression)
                 self.equation.set(result + " (km)")
             
+            elif (buttonName == "fDeg"):
+                self.expression = self.my_math.basic(self.expression_field.get())
+                result = self.my_unitConvert.toFdeg(self.expression)
+                self.equation.set(result + " (\u2b62 \u00B0" + "F)")
+            elif (buttonName == "cDeg"):
+                self.expression = self.my_math.basic(self.expression_field.get())
+                result = self.my_unitConvert.toCdeg(self.expression)
+                self.equation.set(result + " (\u2b62 \u00B0" + "C)")    
+            
+            elif (buttonName == "liter"):
+                self.expression = self.my_math.basic(self.expression_field.get())
+                result = self.my_unitConvert.toLiter(self.expression)
+                self.equation.set(result + " (L)")
+            elif (buttonName == "gal"):
+                self.expression = self.my_math.basic(self.expression_field.get())
+                result = self.my_unitConvert.toGal(self.expression)
+                self.equation.set(result + " (gal)")   
+            
+            elif (buttonName == "cm"):
+                self.expression = self.my_math.basic(self.expression_field.get())
+                result = self.my_unitConvert.toCm(self.expression)
+                self.equation.set(result + " (cm)")
+            elif (buttonName == "in"):
+                self.expression = self.my_math.basic(self.expression_field.get())
+                result = self.my_unitConvert.toIn(self.expression)
+                self.equation.set(result + " (in)")    
+                
+                
             #self.equation.set(result)
 
             self.previous_answer = result  # save result of operation to previous answer variable

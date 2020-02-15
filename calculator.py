@@ -111,24 +111,25 @@ class UnitConversion:
             result = "error"
         return strVal 
     
+    # convert Celsius to Fahrenheit
     def toFdeg(self, expression):
-         
         try:
-            res = (float(expression) - 32) * 1.8
+            res = (float(expression) * 1.8) + 32
             strVal = format("%8g"% (res))
         except:
             res = "error"
         return strVal
-        
     
+    # convert Fahrenheit to Celsius
     def toCdeg(self, expression):
         try:
-            res = float(expression) * 1.8 + 32
+            res = (float(expression) - 32) * (5/9)
             strVal = format("%8g"% (res))
         except:
             res = "error"
         return strVal
     
+    # convert Gallon to Liter
     def toLiter(self, expression):
         try:
             res = float(expression) * 3.78541
@@ -136,7 +137,8 @@ class UnitConversion:
         except:
             res = "error"
         return strVal
-        
+    
+    # convert Liter to Gallon
     def toGal(self, expression):
         try:
             res = float(expression) / 3.78541
@@ -145,6 +147,7 @@ class UnitConversion:
             res = "error"
         return strVal
 
+    # convert Inch to Centimeter
     def toCm(self, expression):
         try:
             res = float(expression) * 2.54
@@ -153,6 +156,7 @@ class UnitConversion:
             res = "error"
         return strVal
 
+    # convert Centimeter to 
     def toIn(self, expression):
         try:
             res = float(expression) / 2.54

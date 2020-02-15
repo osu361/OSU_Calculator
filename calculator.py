@@ -9,11 +9,12 @@ from tkinter import *
 
 import tkinter.font as font  # added this
 from math import *
+# import texteditor
 
 # A global constant of sorts. The number of columns in the calculator
 NUM_COLUMNS = 4
 BTN_BG_COLOR = "black"
-BTN_TXT_COLOR = "light gray"
+BTN_TXT_COLOR = "gray"
 CALC_BG_COLOR = "black"
 OPERATOR_LIST = {"urnary": ["log"], "binary": ["+", "-", "*", "/"]}
 
@@ -54,6 +55,9 @@ class Calculator:
         # button font 20
         self.buttonFont = font.Font(weight="bold", size=20)  # added this
 
+        # Calculation log font 12
+        self.buttonFont2 = font.Font(weight="bold", size=12)
+
         # use object instance to access math functions in the Mathematics class
         self.my_math = Mathematics()
 
@@ -79,6 +83,7 @@ class Calculator:
         # will hold the expression entered by the user
         self.expression = ""
         self.display_text = ""
+        self.expFiltered = ""  # holds value with zeros removed
 
         # for more information on tkinter variables see:
         # https://www.geeksforgeeks.org/python-setting-and-retrieving-values-of-tkinter-variable/
@@ -96,7 +101,9 @@ class Calculator:
         # grid method is used for placing
         # the widgets at respective positions
         # in table like structure .
-        self.expression_field.grid(columnspan=self.numColumns, ipadx=70)
+        Grid.rowconfigure(self.master, 1, weight=1)
+        self.expression_field.grid(
+            columnspan=self.numColumns, ipadx=70, sticky=(N, S, E, W))
 
         # variables to save user entered operands/operator
         self.operands = [None, None]
@@ -111,6 +118,21 @@ class Calculator:
         self.previous_answer = None
 
         self.equation.set('0')
+        # history of all calculations for session
+        self.history = []
+
+        self.calculationLog()
+
+        Grid.rowconfigure(self.master, 1, weight=1)
+        # Label(self.master, text="calculation log").grid(row=1, column=0,
+        #                                                 columnspan=2, sticky=(N, S, E, W))
+        Button(self.master, text='<--use', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+               command=self.useLog, width=7, height=1).grid(
+            row=1, column=2, sticky=(N, S, E, W))
+
+        Button(self.master, text='hist', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+               command=self.showHistory, width=7, height=1).grid(
+            row=1, column=3, sticky=(N, S, E, W))
 
         self.buttonList = [
 
@@ -181,10 +203,10 @@ class Calculator:
         self.lengthOfbuttonList = len(self.buttonList)
 
         # row number starts from 1 since row 0 is for the display
-        self.numRows = self.lengthOfbuttonList // self.numColumns + 1
+        self.numRows = self.lengthOfbuttonList // self.numColumns + 2
 
         index = 0
-        for row in range(1, self.numRows):
+        for row in range(2, self.numRows):
             Grid.rowconfigure(self.master, row, weight=1)  # sticky
             for column in range(self.numColumns):
                 Grid.columnconfigure(self.master, column, weight=1)  # sticky
@@ -299,7 +321,12 @@ class Calculator:
                     else:
                         self.operands[idx] = "-" + self.operands[idx]
                 else:
-                    self.operands[idx] += num
+                    if self.operands[idx][0] == "0":
+                        self.operands[idx] = num
+                    elif self.operands[idx][0] == "-" and (len(self.operands[idx][0]) == 1 or self.operands[idx][1] == "0"):
+                        self.operands[idx] = self.operands[idx][0] + num
+                    else:
+                        self.operands[idx] += num
         else:
             self.displayError("invalid key")
 
@@ -314,6 +341,10 @@ class Calculator:
 
         # Put that code inside the try block
         # which may generate the error
+        #self.expression_field = self.fixZeros(self.expression_field.get())
+
+        # removes leading zeros
+        self.expFiltered = self.fixZeros(self.expression_field.get())
         try:
 
             # global expression
@@ -323,13 +354,20 @@ class Calculator:
             # into string
 
             if self.Flag == "log" and not ignore_flag:  # example of implementing a function
-                total = self.my_math.log10(self.expression_field.get())
+                #total = self.my_math.log10(self.expression_field.get())
+                total = self.my_math.log10(self.expFiltered)
+                self.expFiltered = self.expFiltered + self.Flag
                 self.Flag = ""
             else:
                 # eval takes a string expression and evaluates it
-                total = self.my_math.basic(self.expression_field.get())
+                #total = self.my_math.basic(self.expression_field.get())
+                total = self.my_math.basic(self.expFiltered)
 
             self.equation.set(total)
+
+            # save equations and answers to self.history list
+            self.saveHistory()
+            self.calculationLog()
 
             self.previous_answer = total  # save result of operation to previous answer variable
             self.operands[0] = self.previous_answer
@@ -384,13 +422,70 @@ class Calculator:
     def enterKey(self, event):
         self.equalpress()
 
+    # removes leading zeros
+    def fixZeros(self, s):
+        s = list(s)
+        i = 0
+        while True:
+            if i == 0:
+                if s[i] == '0' and s[i+1].isdigit():
+                    s.pop(i)
+                    i -= 1
+            elif i == len(s)-1 or len(s) < 3:
+                break
+            elif s[i] == '0' and not s[i-1].isdigit() and s[i+1].isdigit():
+                s.pop(i)
+                i -= 1
+            i += 1
 
-# Driver code
+        return "".join(s)
+
+    # save expression and answer to self.history
+    def saveHistory(self):
+        if self.expFiltered != self.equation.get():
+            self.history.append(self.expFiltered + "=" + self.equation.get())
+
+    # write self.history to file
+
+    def history2Txt(self):
+        # create output file
+        out_file = open("calc_history.txt", "w")
+
+        # add elements in self.history to .txt file
+        for i in range(len(self.history)):
+            out_file.write(self.history[i] + '.\n')
+        out_file.close()
+
+    # opens calc_history.txt file using the systems default editor
+    def showHistory(self):
+        # write self.history to file
+        self.history2Txt()
+
+        # uses texteditor function to open file with default editor
+        texteditor.open(filename='calc_history.txt')
+
+    def calculationLog(self, *args):
+        if not self.history:
+            self.options = ['Calculation Log']
+        else:
+            self.options = self.history
+        self.variable = StringVar(self.master)
+        self.variable.set(self.options[-1])  # default value
+        b5 = OptionMenu(self.master, self.variable, *self.options)
+        b5.config(font=self.buttonFont2, width=10)
+        b5.grid(row=1, column=0, columnspan=2, sticky=(N, S, E, W))
+
+    def useLog(self):
+        self.clear()
+        eq = self.variable.get().split('=')[1]
+        self.expression = eq
+        self.equation.set(eq)
+        self.equalpress()
+
+        # Driver code
 if __name__ == "__main__":
     # create a GUI window
     root = Tk()
     root.geometry("300x300")
     my_gui = Calculator(root)
     root.mainloop()
-
-

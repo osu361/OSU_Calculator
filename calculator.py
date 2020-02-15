@@ -9,7 +9,7 @@ from tkinter import *
 
 import tkinter.font as font  # added this
 from math import *
-# import texteditor
+import texteditor
 
 # A global constant of sorts. The number of columns in the calculator
 NUM_COLUMNS = 4

@@ -110,6 +110,9 @@ class UnitConversion:
         except:
             result = "error"
         return strVal 
+    
+    # def funcname(self, parameter_list):
+    #     pass
         
 
 
@@ -188,6 +191,13 @@ class Calculator:
         m_button = "\u2b62" + " m"
         mi_button = "\u2b62" + " mi"
         km_button = "\u2b62" + " km"
+        
+        cDeg_button = "\u2b62 \u00B0" + "C"
+        fDeg_button = "\u2b62 \u00B0" + "F"
+        liter_button = "\u2b62" + " L"
+        gal_button = "\u2b62" + " gal"
+        in_button = "\u2b62" + " in"
+        cm_button = "\u2b62" + " cm"
 
         self.equation.set('')
 
@@ -262,6 +272,19 @@ class Calculator:
                    command=lambda: self.unitConvert("Mi"), width=7, height=1),
             Button(self.master, text= km_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.unitConvert("Km"), width=7, height=1),
+            
+            Button(self.master, text= cDeg_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.unitConvert("cDeg"), width=7, height=1),
+            Button(self.master, text= fDeg_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.unitConvert("fDeg"), width=7, height=1),
+            Button(self.master, text= liter_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.unitConvert("liter"), width=7, height=1),
+            Button(self.master, text= gal_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.unitConvert("gal"), width=7, height=1),
+            Button(self.master, text= cm_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.unitConvert("cm"), width=7, height=1),
+            Button(self.master, text= in_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.unitConvert("in"), width=7, height=1),
 
             # EXAMPLE:  add helloworld button
             Button(self.master, text='HW', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,

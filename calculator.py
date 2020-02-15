@@ -12,7 +12,7 @@ from math import *
 
 
 
-# A global constant of sorts. The number of columns in the calculator
+# A global constant of sorts. The number of columns in the calculato
 NUM_COLUMNS = 4
 BTN_BG_COLOR = "red"
 BTN_TXT_COLOR = "black"

@@ -228,8 +228,9 @@ class Calculator:
 
             if (self.Flag == "log"):  # example of implementing a function
                 startIndex = len("log")
-                total = self.my_math.log10(self.expression)
                 self.expression = self.expression[startIndex:]
+                total = self.my_math.log10(self.expression)
+
             else:
                 # eval takes a string expression and evaluates it
                 total = self.my_math.basic(self.expression_field.get())

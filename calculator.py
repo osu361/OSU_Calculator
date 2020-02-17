@@ -671,6 +671,8 @@ class Calculator:
         # global expression
         self.operands[0] = None
         self.operands[1] = None
+        self.e_operands[0] = None
+        self.e_operands[1] = None
         self.operator = None
         self.clear_stack = not self.clear_stack  # logic for stack size
 

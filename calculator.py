@@ -231,6 +231,7 @@ class Calculator:
 
         # variables to save user entered operands/operator
         self.operands = [None, None]
+        self.e_operands = [None, None]
         self.operator = None
         # Flag used to prohibit user from using two decimals in one number
         self.is_decimal = [False, False]
@@ -360,10 +361,14 @@ class Calculator:
             Button(self.master, text= in_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.unitConvert("in"), width=7, height=1),
 
-            # EXAMPLE:  add helloworld button
-            Button(self.master, text='HW', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.my_hello.printMessage(self.equation),
+            Button(self.master, text='+/-', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.press("negative"),
                    width=7, height=1),
+
+            # EXAMPLE:  add helloworld button
+            # Button(self.master, text='HW', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+            #        command=lambda: self.my_hello.printMessage(self.equation),
+            #        width=7, height=1),
 
             Button(self.master, text=' = ', fg=BTN_TXT_COLOR,
                    bg=BTN_BG_COLOR, command=self.equalpress, width=28, height=1,
@@ -421,7 +426,7 @@ class Calculator:
         # Refactoring for building operands
         is_operand_data = num.isnumeric() or num == "negative"
         is_operand_data = is_operand_data or num == "."
-        is_operand_data = is_operand_data or num == "E"
+        is_operand_data = is_operand_data or num == "E"  # TODO convert E button to operator and add sign button to enable #E-# functionality
 
         if is_operand_data:
             if self.operator is None:
@@ -451,10 +456,16 @@ class Calculator:
     def build_display_text(self):
         if self.operands[0] is not None:
             self.display_text = self.operands[0]
+            if self.e_operands[0] is not None:
+                self.display_text += "E" + self.e_operands[0]
+
             if self.operator is not None:
                 self.display_text += self.operator
                 if self.operands[1] is not None:
                     self.display_text += self.operands[1]
+                    if self.e_operands[1] is not None:
+                        self.display_text += "E" + self.e_operands[1]
+
             self.equation.set(self.display_text)
         elif self.previous_answer is not None:
             self.display_text = self.previous_answer
@@ -489,22 +500,44 @@ class Calculator:
                 self.operands[idx] = num
             else:
                 if num == "negative":
-                    if self.operands[idx][0] == '-':
-                        self.operands[idx] = self.operands[idx][1:]
+                    if self.e_operands[idx] is not None:
+                        if self.e_operands[idx][0] == '-':
+                            self.e_operands[idx] = self.e_operands[idx][1:]
+                        else:
+                            self.e_operands[idx] = "-" + self.e_operands[idx]
                     else:
-                        self.operands[idx] = "-" + self.operands[idx]
+                        if self.operands[idx][0] == '-':
+                            self.operands[idx] = self.operands[idx][1:]
+                        else:
+                            self.operands[idx] = "-" + self.operands[idx]
+                elif num == "E":
+                    add_E_to_operand = len(self.operands[idx]) > 0 and self.operands[idx][0].isnumeric()
+                    add_E_to_operand = add_E_to_operand or len(self.operands[idx]) > 1 and self.operands[idx][0] == "-"
+                    add_E_to_operand = add_E_to_operand and self.e_index < 0
+
+                    if add_E_to_operand:
+                        self.e_operands[idx] = "0"
                 else:
-                    if self.operands[idx][0] == "0":
-                        self.operands[idx] = num
-                    elif self.operands[idx][0] == "-" and (len(self.operands[idx][0]) == 1 or self.operands[idx][1] == "0"):
-                        self.operands[idx] = self.operands[idx][0] + num
+                    if self.e_operands[idx] is not None:
+                        if self.e_operands[idx][0] == "0":
+                            self.e_operands[idx] = num
+                        elif self.e_operands[idx][0] == "-" and (len(self.e_operands[idx][0]) == 1 or self.e_operands[idx][1] == "0"):
+                            self.e_operands[idx] = self.e_operands[idx][0] + num
+                        else:
+                            self.e_operands[idx] += num
                     else:
-                        self.operands[idx] += num
+                        if self.operands[idx][0] == "0":
+                            self.operands[idx] = num
+                        elif self.operands[idx][0] == "-" and (len(self.operands[idx][0]) == 1 or self.operands[idx][1] == "0"):
+                            self.operands[idx] = self.operands[idx][0] + num
+                        else:
+                            self.operands[idx] += num
         else:
             self.displayError("invalid key")
 
     def set_operator(self, operator):
         self.operator = operator
+        self.e_index = -1
 
     # Function to evaluate the final expression
     def equalpress(self, ignore_flag=False):
@@ -551,8 +584,10 @@ class Calculator:
             # initialze the expression variable
             # by empty string
             self.operands[0] = None
+            self.e_operands[0] = None
             self.operator = None
             self.operands[1] = None
+            self.e_operands[1] = None
 
         # if error is generate then handle
         # by the except block

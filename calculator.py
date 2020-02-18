@@ -163,6 +163,42 @@ class UnitConversion:
             res = "error"
         return strVal
 
+class undoRedo:
+    def __init__(self):
+        self.undo_Stack = []
+        self.redo_Stack = []
+
+    def addItemUndo(self, element_to_add, flag = True):
+        self.undo_Stack.append(element_to_add)
+        if len(self.undo_Stack) > 40:
+            self.undo_Stack = self.undo_Stack[1:]
+        if flag:
+            self.redo_Stack.clear()
+
+    def addOperationUndo(self, operand1, operand2, operator, flag = True ):
+        operation = {'num1': operand1, 'num2': operand2, 'op': operator}
+        self.undo_Stack.append(operation)
+        if len(self.undo_Stack) > 40:
+            self.undo_Stack = self.undo_Stack[1:]
+        if flag:
+            self.redo_Stack.clear()
+
+    def updateUndo(self, element_to_add):
+        self.undo_Stack[-1] = element_to_add
+
+    def userUndo(self):
+        if len(self.undo_Stack) == 0:
+            return None
+        self.redo_Stack.append(self.undo_Stack.pop())
+        return self.undo_Stack[-1]
+
+    def userRedo(self):
+        if len(self.redo_Stack) == 0:
+            return None
+        grabbed = self.redo_Stack.pop()
+        self.undo_Stack.append(grabbed)
+        return grabbed
+
 
 class Calculator:
     def __init__(self, master):
@@ -187,6 +223,9 @@ class Calculator:
 
         # Creat a Conversion class object to call the Conversion class functions
         self.my_unitConvert = UnitConversion()
+
+        # Create an Undo/Redo class object for undo/redo functionality
+        self.URstacks = undoRedo()
 
         # set the title of GUI window
         self.master.title("Calculator")
@@ -475,6 +514,7 @@ class Calculator:
 
     def eval_existing_expression(self, operator_type, operator):
         if self.operands[1] is not None:
+            self.URstacks.addOperationUndo(self.operands[0], self.operands[1], self.operator)
             # TODO load OP[0] operator and OP[1] flag for second add
             self.equalpress(operator_type != "binary")
             self.operands[0] = self.previous_answer
@@ -487,8 +527,10 @@ class Calculator:
             if operator_type == "urnary":
                 # TODO and if not flag load OP[0]
                 self.equalpress()
+                self.URstacks.addItemUndo(self.previous_answer)
             else:
                 self.set_operator(operator)
+                self.URstacks.addItemUndo(operator)
         else:
             self.displayError()
 
@@ -498,6 +540,7 @@ class Calculator:
             if self.operands[idx] is None:  # TODO op[0] == 0
                 # TODO Load/update current val of operand
                 self.operands[idx] = num
+                self.URstacks.addItemUndo(self.operands[idx])
             else:
                 if num == "negative":
                     if self.e_operands[idx] is not None:
@@ -532,6 +575,7 @@ class Calculator:
                             self.operands[idx] = self.operands[idx][0] + num
                         else:
                             self.operands[idx] += num
+                self.URstacks.updateUndo(self.operands[idx])
         else:
             self.displayError("invalid key")
 

@@ -41,10 +41,10 @@ class Mathematics:
         try:
             floatValue = float(expression)
             result = log10(floatValue)
-            strVal = format(accuracy% (result))
+            result = format(accuracy% (result))
         except:
             result = "error"
-        return strVal
+        return result
 
 class UnitConversion:
 
@@ -552,6 +552,12 @@ class Calculator:
         self.operator = operator
         self.e_index = -1
 
+    def precisionPress(self,ignore_flag=False ):
+        self.precision = self.expFiltered;
+        self.Flag = ""
+        self.accuracy = "%" + str(self.precision) + "g"
+        print("self.accuracy= ", self.accuracy)
+
     # Function to evaluate the final expression
     def equalpress(self, ignore_flag=False):
         # Try and except statement is used
@@ -571,12 +577,8 @@ class Calculator:
             # eval function evaluate the expression
             # and str function convert the result
             # into string
-            if self.Flag == "P" and not ignore_flag:
-                self.precision = self.expFiltered;
-                self.Flag = ""
-                self.accuracy = "%" + str(self.precision) + "g"
-                print("self.accuracy= ", self.accuracy)
-            elif self.Flag == "log" and not ignore_flag:  # example of implementing a function
+                
+            if self.Flag == "log" and not ignore_flag:  # example of implementing a function
                 #total = self.my_math.log10(self.expression_field.get())
                 total = self.my_math.log10(self.expFiltered, self.accuracy)
                 self.expFiltered = self.expFiltered + self.Flag

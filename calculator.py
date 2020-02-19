@@ -9,6 +9,9 @@ from tkinter import *
 
 import tkinter.font as font  # added this
 from math import *
+
+
+
 # import texteditor
 
 # A global constant of sorts. The number of columns in the calculator
@@ -16,7 +19,7 @@ NUM_COLUMNS = 4
 BTN_BG_COLOR = "black"
 BTN_TXT_COLOR = "gray"
 CALC_BG_COLOR = "black"
-OPERATOR_LIST = {"urnary": ["log"], "binary": ["+", "-", "*", "/"]}
+OPERATOR_LIST = {"urnary": ["log", "P"], "binary": ["+", "-", "*", "/"]}
 
 
 # EXAMPLE: class helloworld
@@ -29,14 +32,16 @@ class HelloWorld:
 
 
 class Mathematics:
-    def basic(self, expression):
-        return str(eval(expression))
+    def basic(self, expression, accuracy):
+        floatValue = float(eval(expression))
+        strVal = format(accuracy% (floatValue))
+        return strVal
 
-    def log10(self, expression):
+    def log10(self, expression, accuracy):
         try:
             floatValue = float(expression)
             result = log10(floatValue)
-            strVal = format("%8g"% (result))
+            strVal = format(accuracy% (result))
         except:
             result = "error"
         return strVal
@@ -191,6 +196,11 @@ class Calculator:
         # set the title of GUI window
         self.master.title("Calculator")
 
+        self.precision = 8
+        
+        self.accuracy = "%" + str(self.precision) + "g"
+            
+
         # set the configuration of GUI window
         # According to Geeks for Geeks the below geomtry declaration is not necessary and imposes predefined
         # size limits which would introduce the need for hard coding
@@ -331,6 +341,9 @@ class Calculator:
                    command=lambda: self.press('E'), width=7, height=1),
             Button(self.master, text=' + ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.press("+"), width=7, height=1),
+            
+            Button(self.master, text=' P ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+                   command=lambda: self.setFlag("P"), width=7, height=1),
 
             Button(self.master, text='log', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.setFlag("log"), width=7, height=1),
@@ -558,18 +571,22 @@ class Calculator:
             # eval function evaluate the expression
             # and str function convert the result
             # into string
-
-            if self.Flag == "log" and not ignore_flag:  # example of implementing a function
+            if self.Flag == "P" and not ignore_flag:
+                self.precision = self.expFiltered;
+                self.Flag = ""
+                self.accuracy = "%" + str(self.precision) + "g"
+                print("self.accuracy= ", self.accuracy)
+            elif self.Flag == "log" and not ignore_flag:  # example of implementing a function
                 #total = self.my_math.log10(self.expression_field.get())
-                total = self.my_math.log10(self.expFiltered)
+                total = self.my_math.log10(self.expFiltered, self.accuracy)
                 self.expFiltered = self.expFiltered + self.Flag
                 self.Flag = ""
             else:
                 # eval takes a string expression and evaluates it
                 #total = self.my_math.basic(self.expression_field.get())
-                total = self.my_math.basic(self.expFiltered)
+                total = self.my_math.basic(self.expFiltered, self.accuracy)
                 floatValue = float(total)
-                strVal = format("%8g"% (floatValue))
+                strVal = format(self.accuracy% (floatValue))
                 total = strVal.strip()
 
             self.equation.set(total)

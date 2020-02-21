@@ -200,6 +200,7 @@ class Calculator:
         
         # default precision is 8
         self.precision = 8
+        self.precInc = False
             
         # set the configuration of GUI window
         # According to Geeks for Geeks the below geomtry declaration is not necessary and imposes predefined
@@ -343,7 +344,7 @@ class Calculator:
                    command=lambda: self.press("+"), width=7, height=1),
             
             Button(self.master, text=' P ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.setFlag("P"), width=7, height=1),
+                   command=lambda: self.precisionPress(), width=7, height=1),
 
             Button(self.master, text='log', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.setFlag("log"), width=7, height=1),
@@ -552,23 +553,26 @@ class Calculator:
         self.operator = operator
         self.e_index = -1
 
-    # TODO: 
-    def precisionPress(self, ignore_flag=False):
-        # TODO: need to be between 0 and 8
-        # TODO: need to be int
-        self.precision = self.expFiltered
-        self.Flag = ""
-        print("self.precision= ")
+    def precisionPress(self):
+        if (self.precInc == True and self.precision < 8):
+            self.precision += 1
+        elif(self.precInc == True and self.precision == 8):
+            self.precision -= 1
+            self.precInc = False
+        elif (self.precInc == False and self.precision >= 1):
+            self.precision -= 1
+        else:
+            self.precision += 1
+            self.precInc = True 
+        
+        # print("self.precision= ", self.precision)
         
     def doPrecision(self, total):
-        print("IN PRECISE")
         try:
             floatValue = float(total)
             result = round(floatValue, self.precision)
             if (self.precision == 0):
                 return int(result)
-            print(result)
-            print(self.precision)
             return result
         except:
             self.displayError("error: precise")
@@ -596,7 +600,7 @@ class Calculator:
             if self.Flag == "log" and not ignore_flag:  # example of implementing a function
                 #total = self.my_math.log10(self.expression_field.get())
                 total = self.my_math.log10(self.expFiltered)
-                # self.expFiltered = self.expFiltered + self.Flag
+                self.expFiltered = self.expFiltered + self.Flag
                 self.Flag = ""
             else:
                 # eval takes a string expression and evaluates it

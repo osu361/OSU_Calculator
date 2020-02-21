@@ -609,16 +609,12 @@ class Calculator:
                     self.expression_field.get())
                 result = self.my_unitConvert.toKg(self.expression)
                 self.equation.set(result + " (kg)")
-                self.saveHistory()
-                self.calculationLog()
 
             elif (buttonName == "Lbs"):
                 self.expression = self.my_math.basic(
                     self.expression_field.get())
                 result = self.my_unitConvert.toLbs(self.expression)
                 self.equation.set(result + " (lbs)")
-                self.saveHistory()
-                self.calculationLog()
 
             elif (buttonName == "Ft"):
                 self.expression = self.my_math.basic(
@@ -675,6 +671,9 @@ class Calculator:
                 self.equation.set(result + " (in)")
 
             # self.equation.set(result)
+            self.expFiltered = self.expression
+            self.saveHistory()
+            self.calculationLog()
 
             self.previous_answer = result  # save result of operation to previous answer variable
             self.operands[0] = self.previous_answer
@@ -781,6 +780,7 @@ class Calculator:
     def useLog(self):
         self.clear()
         eq = self.variable.get().split('=')[1]
+        eq = eq.split('(')[0]
         self.expression = eq
         self.equation.set(eq)
         self.equalpress()

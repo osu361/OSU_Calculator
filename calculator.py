@@ -9,6 +9,7 @@ from tkinter import *
 
 import tkinter.font as font  # added this
 from math import *
+import decimal
 
 
 
@@ -179,6 +180,7 @@ class Calculator:
         self.screenFont = font.Font(weight="bold", size=30)  # added this
 
         # button font 20
+        
         self.buttonFont = font.Font(weight="bold", size=20)  # added this
 
         # Calculation log font 12

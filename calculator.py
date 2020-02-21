@@ -33,18 +33,18 @@ class HelloWorld:
 
 
 class Mathematics:
-    def basic(self, expression, accuracy):
+    def basic(self, expression, precision):
         floatValue = float(eval(expression))
-        strVal = format(accuracy% (floatValue))
-        return strVal
+        result = str(round(floatValue, precision))
+        return result
 
-    def log10(self, expression, accuracy):
+    def log10(self, expression, precision):
         try:
             floatValue = float(expression)
-            result = log10(floatValue)
-            result = format(accuracy% (result))
+            logVal = log10(floatValue)
+            result = str(round(logVal, precision))
         except:
-            result = "error"
+            result = "error: log10"
         return result
 
 class UnitConversion:
@@ -57,7 +57,7 @@ class UnitConversion:
             result = conversionFactor*floatValue
             strVal = format("%8g"% (result))
         except:
-            result = "error"
+            result = "error: toKg"
         return strVal
 
     # Convert from kg to lbs
@@ -68,7 +68,7 @@ class UnitConversion:
             result = conversionFactor*floatValue
             strVal = format("%8g"% (result))
         except:
-            result = "error"
+            result = "error: toLbs"
         return strVal
 
     # Convert from from meters to feet
@@ -79,7 +79,7 @@ class UnitConversion:
             result = conversionFactor*floatValue
             strVal = format("%8g"% (result))
         except:
-            result = "error"
+            result = "error: toFt"
         return strVal
 
     # Convert from from feet to meters
@@ -90,7 +90,7 @@ class UnitConversion:
             result = conversionFactor*floatValue
             strVal = format("%8g"% (result))
         except:
-            result = "error"
+            result = "error: toM"
         return strVal
 
     # Convert from from kilometers to miles
@@ -101,7 +101,7 @@ class UnitConversion:
             result = conversionFactor*floatValue
             strVal = format("%8g"% (result))
         except:
-            result = "error"
+            result = "error: toMi"
         return strVal
 
     # Convert from from miles to kilometers
@@ -112,61 +112,61 @@ class UnitConversion:
             result = conversionFactor*floatValue
             strVal = format("%8g"% (result))
         except:
-            result = "error"
+            result = "error: toKm"
         return strVal
 
     # convert Celsius to Fahrenheit
     def toFdeg(self, expression):
         try:
-            res = (float(expression) * 1.8) + 32
-            strVal = format("%8g"% (res))
+            result = (float(expression) * 1.8) + 32
+            strVal = format("%8g"% (result))
         except:
-            res = "error"
+            result = "error: toFdeg"
         return strVal
 
     # convert Fahrenheit to Celsius
     def toCdeg(self, expression):
         try:
-            res = (float(expression) - 32) * (5/9)
-            strVal = format("%8g"% (res))
+            result = (float(expression) - 32) * (5/9)
+            strVal = format("%8g"% (result))
         except:
-            res = "error"
+            result = "error: toCdeg"
         return strVal
 
     # convert Gallon to Liter
     def toLiter(self, expression):
         try:
-            res = float(expression) * 3.78541
-            strVal = format("%8g"% (res))
+            result = float(expression) * 3.78541
+            strVal = format("%8g"% (result))
         except:
-            res = "error"
+            result = "error: toLiter"
         return strVal
 
     # convert Liter to Gallon
     def toGal(self, expression):
         try:
-            res = float(expression) / 3.78541
-            strVal = format("%8g"% (res))
+            result = float(expression) / 3.78541
+            strVal = format("%8g"% (result))
         except:
-            res = "error"
+            result = "error: toGal"
         return strVal
 
     # convert Inch to Centimeter
     def toCm(self, expression):
         try:
-            res = float(expression) * 2.54
-            strVal = format("%8g"% (res))
+            result = float(expression) * 2.54
+            strVal = format("%8g"% (result))
         except:
-            res = "error"
+            result = "error: toCm"
         return strVal
 
     # convert Centimeter to
     def toIn(self, expression):
         try:
-            res = float(expression) / 2.54
-            strVal = format("%8g"% (res))
+            result = float(expression) / 2.54
+            strVal = format("%8g"% (result))
         except:
-            res = "error"
+            result = "error: toIn"
         return strVal
 
 
@@ -197,12 +197,9 @@ class Calculator:
 
         # set the title of GUI window
         self.master.title("Calculator")
-
-        self.precision = 8
         
-        self.accuracy = "%" + str(self.precision) + "g"
+        self.precision = 4
             
-
         # set the configuration of GUI window
         # According to Geeks for Geeks the below geomtry declaration is not necessary and imposes predefined
         # size limits which would introduce the need for hard coding
@@ -456,7 +453,7 @@ class Calculator:
             self.eval_existing_expression("binary", num)
 
         else:
-            self.displayError()
+            self.displayError("error: press")
 
         self.build_display_text()
 
@@ -486,7 +483,7 @@ class Calculator:
             self.display_text = self.previous_answer
             self.equation.set(self.display_text)
         else:
-            self.displayError()
+            self.displayError("error: display")
 
     def eval_existing_expression(self, operator_type, operator):
         if self.operands[1] is not None:
@@ -505,7 +502,7 @@ class Calculator:
             else:
                 self.set_operator(operator)
         else:
-            self.displayError()
+            self.displayError("error: eval exist")
 
     def set_operand(self, idx, num):
 
@@ -554,11 +551,12 @@ class Calculator:
         self.operator = operator
         self.e_index = -1
 
-    def precisionPress(self,ignore_flag=False ):
-        self.precision = self.expFiltered;
+    # TODO: 
+    def precisionPress(self, ignore_flag=False):
+        self.precision = self.expFiltered
         self.Flag = ""
-        self.accuracy = "%" + str(self.precision) + "g"
-        print("self.accuracy= ", self.accuracy)
+        self.precision = "%" + str(self.precision) + "g"
+        print("self.precision= ", self.precision)
 
     # Function to evaluate the final expression
     def equalpress(self, ignore_flag=False):
@@ -582,16 +580,12 @@ class Calculator:
                 
             if self.Flag == "log" and not ignore_flag:  # example of implementing a function
                 #total = self.my_math.log10(self.expression_field.get())
-                total = self.my_math.log10(self.expFiltered, self.accuracy)
+                total = self.my_math.log10(self.expFiltered, self.precision)
                 self.expFiltered = self.expFiltered + self.Flag
                 self.Flag = ""
             else:
                 # eval takes a string expression and evaluates it
-                #total = self.my_math.basic(self.expression_field.get())
-                total = self.my_math.basic(self.expFiltered, self.accuracy)
-                floatValue = float(total)
-                strVal = format(self.accuracy% (floatValue))
-                total = strVal.strip()
+                total = self.my_math.basic(self.expFiltered, self.precision)
 
             self.equation.set(total)
 
@@ -613,7 +607,7 @@ class Calculator:
         # if error is generate then handle
         # by the except block
         except:
-            self.displayError()
+            self.displayError("error: eval")
 
     # Function to clear the contents
     # of text entry box
@@ -622,54 +616,54 @@ class Calculator:
 
         try:
             if (buttonName == "Kg"):
-                self.expression = self.my_math.basic(self.expression_field.get())
+                self.expression = self.my_math.basic(self.expression_field.get(), self.precision)
                 result = self.my_unitConvert.toKg(self.expression)
                 self.equation.set(result + " (kg)" )
             elif (buttonName == "Lbs"):
-                self.expression = self.my_math.basic(self.expression_field.get())
+                self.expression = self.my_math.basic(self.expression_field.get(), self.precision)
                 result = self.my_unitConvert.toLbs(self.expression)
                 self.equation.set(result + " (lbs)")
             elif (buttonName == "Ft"):
-                self.expression = self.my_math.basic(self.expression_field.get())
+                self.expression = self.my_math.basic(self.expression_field.get(), self.precision)
                 result = self.my_unitConvert.toFt(self.expression)
                 self.equation.set(result + " (ft)")
             elif (buttonName == "M"):
-                self.expression = self.my_math.basic(self.expression_field.get())
+                self.expression = self.my_math.basic(self.expression_field.get(), self.precision)
                 result = self.my_unitConvert.toM(self.expression)
                 self.equation.set(result  + " (m)" )
             elif (buttonName == "Mi"):
-                self.expression = self.my_math.basic(self.expression_field.get())
+                self.expression = self.my_math.basic(self.expression_field.get(), self.precision)
                 result = self.my_unitConvert.toMi(self.expression)
                 self.equation.set(result  + " (mi)")
             elif (buttonName == "Km"):
-                self.expression = self.my_math.basic(self.expression_field.get())
+                self.expression = self.my_math.basic(self.expression_field.get(), self.precision)
                 result = self.my_unitConvert.toKm(self.expression)
                 self.equation.set(result + " (km)")
 
             elif (buttonName == "fDeg"):
-                self.expression = self.my_math.basic(self.expression_field.get())
+                self.expression = self.my_math.basic(self.expression_field.get(), self.precision)
                 result = self.my_unitConvert.toFdeg(self.expression)
                 self.equation.set(result + " (\u2b62 \u00B0" + "F)")
             elif (buttonName == "cDeg"):
-                self.expression = self.my_math.basic(self.expression_field.get())
+                self.expression = self.my_math.basic(self.expression_field.get(), self.precision)
                 result = self.my_unitConvert.toCdeg(self.expression)
                 self.equation.set(result + " (\u2b62 \u00B0" + "C)")
 
             elif (buttonName == "liter"):
-                self.expression = self.my_math.basic(self.expression_field.get())
+                self.expression = self.my_math.basic(self.expression_field.get(), self.precision)
                 result = self.my_unitConvert.toLiter(self.expression)
                 self.equation.set(result + " (L)")
             elif (buttonName == "gal"):
-                self.expression = self.my_math.basic(self.expression_field.get())
+                self.expression = self.my_math.basic(self.expression_field.get(), self.precision)
                 result = self.my_unitConvert.toGal(self.expression)
                 self.equation.set(result + " (gal)")
 
             elif (buttonName == "cm"):
-                self.expression = self.my_math.basic(self.expression_field.get())
+                self.expression = self.my_math.basic(self.expression_field.get(), self.precision)
                 result = self.my_unitConvert.toCm(self.expression)
                 self.equation.set(result + " (cm)")
             elif (buttonName == "in"):
-                self.expression = self.my_math.basic(self.expression_field.get())
+                self.expression = self.my_math.basic(self.expression_field.get(), self.precision)
                 result = self.my_unitConvert.toIn(self.expression)
                 self.equation.set(result + " (in)")
 
@@ -686,7 +680,7 @@ class Calculator:
             self.operator = None
             self.operands[1] = None
         except:
-            self.displayError()
+            self.displayError("error: unit convert")
 
     def clear(self):
         # global expression
@@ -708,7 +702,7 @@ class Calculator:
     # Function to load a previously saved answer, displays an error if no saved answer exists
     def loadAnswer(self):
         if self.saved_answer is None:
-            self.displayError()
+            self.displayError("error: load")
         else:
             self.expression = str(self.saved_answer)
             self.equation.set(self.expression)
@@ -719,7 +713,7 @@ class Calculator:
 
     # function to display error to the screen if the user tries to perform illegal operations
     def displayError(self, msg=" error "):
-        self.equation.set(" error ")
+        self.equation.set(msg)
         self.expression = ""
 
     def enterKey(self, event):

@@ -33,16 +33,16 @@ class HelloWorld:
 
 
 class Mathematics:
-    def basic(self, expression, precision):
+    def basic(self, expression):
         floatValue = float(eval(expression))
-        result = str(round(floatValue, precision))
+        result = str(floatValue)
         return result
 
-    def log10(self, expression, precision):
+    def log10(self, expression):
         try:
             floatValue = float(expression)
             logVal = log10(floatValue)
-            result = str(round(logVal, precision))
+            result = str(logVal)
         except:
             result = "error: log10"
         return result
@@ -198,7 +198,8 @@ class Calculator:
         # set the title of GUI window
         self.master.title("Calculator")
         
-        self.precision = 4
+        # default precision is 8
+        self.precision = 8
             
         # set the configuration of GUI window
         # According to Geeks for Geeks the below geomtry declaration is not necessary and imposes predefined
@@ -553,10 +554,24 @@ class Calculator:
 
     # TODO: 
     def precisionPress(self, ignore_flag=False):
+        # TODO: need to be between 0 and 8
+        # TODO: need to be int
         self.precision = self.expFiltered
         self.Flag = ""
-        self.precision = "%" + str(self.precision) + "g"
-        print("self.precision= ", self.precision)
+        print("self.precision= ")
+        
+    def doPrecision(self, total):
+        print("IN PRECISE")
+        try:
+            floatValue = float(total)
+            result = round(floatValue, self.precision)
+            if (self.precision == 0):
+                return int(result)
+            print(result)
+            print(self.precision)
+            return result
+        except:
+            self.displayError("error: precise")
 
     # Function to evaluate the final expression
     def equalpress(self, ignore_flag=False):
@@ -580,20 +595,21 @@ class Calculator:
                 
             if self.Flag == "log" and not ignore_flag:  # example of implementing a function
                 #total = self.my_math.log10(self.expression_field.get())
-                total = self.my_math.log10(self.expFiltered, self.precision)
-                self.expFiltered = self.expFiltered + self.Flag
+                total = self.my_math.log10(self.expFiltered)
+                # self.expFiltered = self.expFiltered + self.Flag
                 self.Flag = ""
             else:
                 # eval takes a string expression and evaluates it
-                total = self.my_math.basic(self.expFiltered, self.precision)
+                total = self.my_math.basic(self.expFiltered)
 
-            self.equation.set(total)
+            preciseTotal = self.doPrecision(total)
+            self.equation.set(preciseTotal)
 
             # save equations and answers to self.history list
             self.saveHistory()
             self.calculationLog()
 
-            self.previous_answer = total  # save result of operation to previous answer variable
+            self.previous_answer = preciseTotal  # save result of operation to previous answer variable
             self.operands[0] = self.previous_answer
 
             # initialze the expression variable
@@ -607,7 +623,7 @@ class Calculator:
         # if error is generate then handle
         # by the except block
         except:
-            self.displayError("error: eval")
+            self.displayError("error: equal")
 
     # Function to clear the contents
     # of text entry box
@@ -616,54 +632,54 @@ class Calculator:
 
         try:
             if (buttonName == "Kg"):
-                self.expression = self.my_math.basic(self.expression_field.get(), self.precision)
+                self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toKg(self.expression)
                 self.equation.set(result + " (kg)" )
             elif (buttonName == "Lbs"):
-                self.expression = self.my_math.basic(self.expression_field.get(), self.precision)
+                self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toLbs(self.expression)
                 self.equation.set(result + " (lbs)")
             elif (buttonName == "Ft"):
-                self.expression = self.my_math.basic(self.expression_field.get(), self.precision)
+                self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toFt(self.expression)
                 self.equation.set(result + " (ft)")
             elif (buttonName == "M"):
-                self.expression = self.my_math.basic(self.expression_field.get(), self.precision)
+                self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toM(self.expression)
                 self.equation.set(result  + " (m)" )
             elif (buttonName == "Mi"):
-                self.expression = self.my_math.basic(self.expression_field.get(), self.precision)
+                self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toMi(self.expression)
                 self.equation.set(result  + " (mi)")
             elif (buttonName == "Km"):
-                self.expression = self.my_math.basic(self.expression_field.get(), self.precision)
+                self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toKm(self.expression)
                 self.equation.set(result + " (km)")
 
             elif (buttonName == "fDeg"):
-                self.expression = self.my_math.basic(self.expression_field.get(), self.precision)
+                self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toFdeg(self.expression)
                 self.equation.set(result + " (\u2b62 \u00B0" + "F)")
             elif (buttonName == "cDeg"):
-                self.expression = self.my_math.basic(self.expression_field.get(), self.precision)
+                self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toCdeg(self.expression)
                 self.equation.set(result + " (\u2b62 \u00B0" + "C)")
 
             elif (buttonName == "liter"):
-                self.expression = self.my_math.basic(self.expression_field.get(), self.precision)
+                self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toLiter(self.expression)
                 self.equation.set(result + " (L)")
             elif (buttonName == "gal"):
-                self.expression = self.my_math.basic(self.expression_field.get(), self.precision)
+                self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toGal(self.expression)
                 self.equation.set(result + " (gal)")
 
             elif (buttonName == "cm"):
-                self.expression = self.my_math.basic(self.expression_field.get(), self.precision)
+                self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toCm(self.expression)
                 self.equation.set(result + " (cm)")
             elif (buttonName == "in"):
-                self.expression = self.my_math.basic(self.expression_field.get(), self.precision)
+                self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toIn(self.expression)
                 self.equation.set(result + " (in)")
 

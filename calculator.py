@@ -55,7 +55,7 @@ class UnitConversion:
         try:
             floatValue = float(expression)
             result = conversionFactor*floatValue
-            strVal = format("%8g"% (result))
+            strVal = str(result)
         except:
             result = "error: toKg"
         return strVal
@@ -66,7 +66,7 @@ class UnitConversion:
         try:
             floatValue = float(expression)
             result = conversionFactor*floatValue
-            strVal = format("%8g"% (result))
+            strVal = str(result)
         except:
             result = "error: toLbs"
         return strVal
@@ -77,7 +77,7 @@ class UnitConversion:
         try:
             floatValue = float(expression)
             result = conversionFactor*floatValue
-            strVal = format("%8g"% (result))
+            strVal = str(result)
         except:
             result = "error: toFt"
         return strVal
@@ -88,7 +88,7 @@ class UnitConversion:
         try:
             floatValue = float(expression)
             result = conversionFactor*floatValue
-            strVal = format("%8g"% (result))
+            strVal = str(result)
         except:
             result = "error: toM"
         return strVal
@@ -99,7 +99,7 @@ class UnitConversion:
         try:
             floatValue = float(expression)
             result = conversionFactor*floatValue
-            strVal = format("%8g"% (result))
+            strVal = str(result)
         except:
             result = "error: toMi"
         return strVal
@@ -110,7 +110,7 @@ class UnitConversion:
         try:
             floatValue = float(expression)
             result = conversionFactor*floatValue
-            strVal = format("%8g"% (result))
+            strVal = str(result)
         except:
             result = "error: toKm"
         return strVal
@@ -119,7 +119,7 @@ class UnitConversion:
     def toFdeg(self, expression):
         try:
             result = (float(expression) * 1.8) + 32
-            strVal = format("%8g"% (result))
+            strVal = str(result)
         except:
             result = "error: toFdeg"
         return strVal
@@ -128,7 +128,7 @@ class UnitConversion:
     def toCdeg(self, expression):
         try:
             result = (float(expression) - 32) * (5/9)
-            strVal = format("%8g"% (result))
+            strVal = str(result)
         except:
             result = "error: toCdeg"
         return strVal
@@ -137,7 +137,7 @@ class UnitConversion:
     def toLiter(self, expression):
         try:
             result = float(expression) * 3.78541
-            strVal = format("%8g"% (result))
+            strVal = str(result)
         except:
             result = "error: toLiter"
         return strVal
@@ -146,7 +146,7 @@ class UnitConversion:
     def toGal(self, expression):
         try:
             result = float(expression) / 3.78541
-            strVal = format("%8g"% (result))
+            strVal = str(result)
         except:
             result = "error: toGal"
         return strVal
@@ -155,7 +155,7 @@ class UnitConversion:
     def toCm(self, expression):
         try:
             result = float(expression) * 2.54
-            strVal = format("%8g"% (result))
+            strVal = str(result)
         except:
             result = "error: toCm"
         return strVal
@@ -164,7 +164,7 @@ class UnitConversion:
     def toIn(self, expression):
         try:
             result = float(expression) / 2.54
-            strVal = format("%8g"% (result))
+            strVal = str(result)
         except:
             result = "error: toIn"
         return strVal
@@ -565,15 +565,15 @@ class Calculator:
             self.precision += 1
             self.precInc = True 
         
-        # print("self.precision= ", self.precision)
+        print("self.precision= ", self.precision)
         
     def doPrecision(self, total):
         try:
             floatValue = float(total)
             result = round(floatValue, self.precision)
             if (self.precision == 0):
-                return int(result)
-            return result
+                result = int(result)
+            return str(result)
         except:
             self.displayError("error: precise")
 
@@ -635,62 +635,54 @@ class Calculator:
     def unitConvert(self, buttonName):
 
         try:
+            self.expression = self.my_math.basic(self.expression_field.get())
+            # unitsStr = ""
+            # result = self.expression
             if (buttonName == "Kg"):
-                self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toKg(self.expression)
-                self.equation.set(result + " (kg)" )
+                unitsStr = " (kg)"
+                
             elif (buttonName == "Lbs"):
-                self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toLbs(self.expression)
-                self.equation.set(result + " (lbs)")
+                unitsStr = " (lbs)"
             elif (buttonName == "Ft"):
-                self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toFt(self.expression)
-                self.equation.set(result + " (ft)")
+                unitsStr = " (ft)"
             elif (buttonName == "M"):
-                self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toM(self.expression)
-                self.equation.set(result  + " (m)" )
+                unitsStr = " (m)"
             elif (buttonName == "Mi"):
-                self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toMi(self.expression)
-                self.equation.set(result  + " (mi)")
+                unitsStr = " (mi)"
             elif (buttonName == "Km"):
-                self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toKm(self.expression)
-                self.equation.set(result + " (km)")
+                unitsStr = " (km)"
 
             elif (buttonName == "fDeg"):
-                self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toFdeg(self.expression)
-                self.equation.set(result + " (\u2b62 \u00B0" + "F)")
+                unitsStr = " (\u2b62 \u00B0" + "F)"
             elif (buttonName == "cDeg"):
-                self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toCdeg(self.expression)
-                self.equation.set(result + " (\u2b62 \u00B0" + "C)")
+                unitsStr = " (\u2b62 \u00B0" + "C)"
 
             elif (buttonName == "liter"):
-                self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toLiter(self.expression)
-                self.equation.set(result + " (L)")
+                unitsStr = " (L)"
             elif (buttonName == "gal"):
-                self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toGal(self.expression)
-                self.equation.set(result + " (gal)")
+                unitsStr = " (gal)"
 
             elif (buttonName == "cm"):
-                self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toCm(self.expression)
-                self.equation.set(result + " (cm)")
+                unitsStr = " (cm)"
             elif (buttonName == "in"):
-                self.expression = self.my_math.basic(self.expression_field.get())
                 result = self.my_unitConvert.toIn(self.expression)
-                self.equation.set(result + " (in)")
+                unitsStr = " (in)"
 
 
-            #self.equation.set(result)
-
-            self.previous_answer = result  # save result of operation to previous answer variable
+            preciseResult = self.doPrecision(str(result))
+            self.equation.set(preciseResult + unitsStr)
+            self.previous_answer = preciseResult  # save result of operation to previous answer variable
             self.operands[0] = self.previous_answer
 
             # initialze the expression variable

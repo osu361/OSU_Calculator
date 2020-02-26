@@ -17,6 +17,7 @@ BTN_BG_COLOR = "black"
 BTN_TXT_COLOR = "gray"
 CALC_BG_COLOR = "black"
 OPERATOR_LIST = {"urnary": ["log"], "binary": ["+", "-", "*", "/"]}
+MAX_UNDO_REDO_STACK = 40
 
 
 # EXAMPLE: class helloworld
@@ -40,6 +41,7 @@ class Mathematics:
         except:
             result = "error"
         return strVal
+
 
 class UnitConversion:
 
@@ -163,42 +165,64 @@ class UnitConversion:
             res = "error"
         return strVal
 
+
 class undoRedo:
     def __init__(self):
         self.undo_Stack = []
         self.redo_Stack = []
 
+
+    def get_top_undo(self):
+        """function to get top of undo stack"""
+        if len(self.undo_Stack) > 0:
+            return self.undo_Stack[-1]
+        else:
+            return None
+
     def addItemUndo(self, element_to_add, flag = True):
+        """function to add new item to the undo stack"""
         self.undo_Stack.append(element_to_add)
-        if len(self.undo_Stack) > 40:
-            self.undo_Stack = self.undo_Stack[1:]
-        if flag:
-            self.redo_Stack.clear()
+        self.trim_stack(flag)
 
     def addOperationUndo(self, operand1, operand2, operator, flag = True ):
+        """function to add a complete operation to the undo stack"""
         operation = {'num1': operand1, 'num2': operand2, 'op': operator}
-        self.undo_Stack.append(operation)
-        if len(self.undo_Stack) > 40:
-            self.undo_Stack = self.undo_Stack[1:]
-        if flag:
-            self.redo_Stack.clear()
+        self.undo_Stack[-1] = operation
+        self.trim_stack(flag)
 
     def updateUndo(self, element_to_add):
+        """function to update the top of the undo stack with the new appropriate value"""
         self.undo_Stack[-1] = element_to_add
 
     def userUndo(self):
-        if len(self.undo_Stack) == 0:
-            return None
+        """Function to undo a previous action and load the undone action to the redo stack"""
         self.redo_Stack.append(self.undo_Stack.pop())
-        return self.undo_Stack[-1]
+        self.trim_stack(False)
+        if len(self.undo_Stack) > 0:
+            return self.undo_Stack[-1]
+        else:
+            return None
 
     def userRedo(self):
+        """function to redo an action that was previously undone"""
         if len(self.redo_Stack) == 0:
             return None
+
         grabbed = self.redo_Stack.pop()
         self.undo_Stack.append(grabbed)
+        self.trim_stack(False)
         return grabbed
 
+    def trim_stack(self, clear_redo):
+        """Function to delete the oldest entries on the stack if the stack becomes too large"""
+        if len(self.undo_Stack) > MAX_UNDO_REDO_STACK:
+            self.undo_Stack = self.undo_Stack[1:]
+
+        if len(self.redo_Stack) > MAX_UNDO_REDO_STACK:
+            self.redo_Stack = self.redo_Stack[1:]
+
+        if clear_redo:
+            self.redo_Stack.clear()
 
 class Calculator:
     def __init__(self, master):
@@ -331,9 +355,9 @@ class Calculator:
             Button(self.master, text=' ) ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.press(')'), width=7, height=1),
             Button(self.master, text=' UNDO ',  fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.setFlag('UNDO'), width=7, height=1),
+                   command=lambda: self.undo(), width=7, height=1),
             Button(self.master, text=' REDO ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
-                   command=lambda: self.setFlag('REDO'), width=7, height=1),
+                   command=lambda: self.redo(), width=7, height=1),
 
             Button(self.master, text=' 7 ', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.press('7'), width=7, height=1),
@@ -514,7 +538,6 @@ class Calculator:
 
     def eval_existing_expression(self, operator_type, operator):
         if self.operands[1] is not None:
-            self.URstacks.addOperationUndo(self.operands[0], self.operands[1], self.operator)
             # TODO load OP[0] operator and OP[1] flag for second add
             self.equalpress(operator_type != "binary")
             self.operands[0] = self.previous_answer
@@ -527,7 +550,6 @@ class Calculator:
             if operator_type == "urnary":
                 # TODO and if not flag load OP[0]
                 self.equalpress()
-                self.URstacks.addItemUndo(self.previous_answer)
             else:
                 self.set_operator(operator)
                 self.URstacks.addItemUndo(operator)
@@ -556,7 +578,7 @@ class Calculator:
                 elif num == "E":
                     add_E_to_operand = len(self.operands[idx]) > 0 and self.operands[idx][0].isnumeric()
                     add_E_to_operand = add_E_to_operand or len(self.operands[idx]) > 1 and self.operands[idx][0] == "-"
-                    add_E_to_operand = add_E_to_operand and self.e_index < 0
+                    # add_E_to_operand = add_E_to_operand and self.e_index < 0
 
                     if add_E_to_operand:
                         self.e_operands[idx] = "0"
@@ -575,7 +597,11 @@ class Calculator:
                             self.operands[idx] = self.operands[idx][0] + num
                         else:
                             self.operands[idx] += num
-                self.URstacks.updateUndo(self.operands[idx])
+
+                if self.e_operands[idx] is None:
+                    self.URstacks.updateUndo(self.operands[idx])
+                else:
+                    self.URstacks.updateUndo(self.operands[idx] + "E" + self.e_operands[idx])
         else:
             self.displayError("invalid key")
 
@@ -622,8 +648,21 @@ class Calculator:
             self.saveHistory()
             self.calculationLog()
 
+            if self.operands[1] is not None:
+                temp_num1 = self.operands[0]
+                if self.e_operands[0] is not None:
+                    temp_num1 += "E" + self.e_operands[0]
+
+                temp_num2 = self.operands[1]
+                if self.e_operands[1] is not None:
+                    temp_num2 += "E" + self.e_operands[1]
+
+                self.URstacks.addOperationUndo(temp_num1, temp_num2, self.operator)
+
             self.previous_answer = total  # save result of operation to previous answer variable
             self.operands[0] = self.previous_answer
+
+            self.URstacks.addItemUndo(self.operands[0])
 
             # initialze the expression variable
             # by empty string
@@ -742,7 +781,7 @@ class Calculator:
 
     # function to display error to the screen if the user tries to perform illegal operations
     def displayError(self, msg=" error "):
-        self.equation.set(" error ")
+        self.equation.set(msg)
         self.expression = ""
 
     def enterKey(self, event):
@@ -807,6 +846,78 @@ class Calculator:
         self.expression = eq
         self.equation.set(eq)
         self.equalpress()
+
+    def undo(self):
+        """undoes the mose recent action"""
+        result = self.URstacks.userUndo()
+        if type(result) == dict:  # if the most recent action cleared previous operands/operator reload them
+            temp_num1 = result["num1"]
+            temp_num2 = result["num2"]
+            self.operator = temp_op = result["op"]
+
+            self.previous_answer = str(eval(temp_num1 + temp_op + temp_num2))
+
+            self.load_operand(temp_num1, 0)
+            self.load_operand(temp_num2, 1)
+
+        elif result is not None:  # load appropriate data from the result
+            if result in OPERATOR_LIST["binary"]:
+                self.operands[1] = None
+            elif self.operands[1] is not None:
+                self.operands[1] is None
+            elif self.operator is not None:
+                self.operator = None
+            else:
+                self.load_operand(result, 0)
+
+        else:  # clear data if undoing the first action
+            if self.operands[0] is not None and self.operator is None:
+                self.operands[0] = None
+                self.previous_answer = 0
+            elif self.operator is not None and self.operands[1] is None:
+                self.operator = None
+            else:
+                self.displayError("nothing to undo")
+
+        self.build_display_text()
+
+    def redo(self):
+        """redoes an undone action"""
+        ref = self.URstacks.get_top_undo()
+        result = self.URstacks.userRedo()
+        if result is not None:  # if action to be redone redo it
+            if type(ref) == dict:  # if previous action is an operation load op1 from result
+                self.load_operand(result, 0)
+                self.operator = None
+                self.operands[1] = None
+            else:  # load appropriate data from result
+                if type(result) == dict:
+                    temp_num1 = result["num1"]
+                    temp_num2 = result["num2"]
+                    self.operator = result["op"]
+
+                    self.load_operand(temp_num1, 0)
+                    self.load_operand(temp_num2, 1)
+                elif result in OPERATOR_LIST["binary"]:
+                    self.operator = result
+                elif self.operator is not None:
+                    self.load_operand(result, 1)
+                else:
+                    self.load_operand(result, 0)
+
+            self.build_display_text()
+        else:
+            self.displayError("nothing to redo")
+
+    def load_operand(self, raw_data, idx):
+        """function to load operand so E notation is properly loaded"""
+        if "E" in raw_data or "e" in raw_data:
+            raw_data = raw_data.upper().split("E")
+            self.operands[idx] = raw_data[0]
+            self.e_operands[idx] = raw_data[1]
+        else:
+            self.operands[idx] = raw_data
+            self.e_operands[idx] = None
 
 # Driver code
 if __name__ == "__main__":

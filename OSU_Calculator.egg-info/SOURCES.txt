@@ -1,0 +1,7 @@
+README.md
+setup.py
+OSU_Calculator.egg-info/PKG-INFO
+OSU_Calculator.egg-info/SOURCES.txt
+OSU_Calculator.egg-info/dependency_links.txt
+OSU_Calculator.egg-info/requires.txt
+OSU_Calculator.egg-info/top_level.txt

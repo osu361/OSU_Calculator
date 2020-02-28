@@ -17,7 +17,19 @@ Make sure you have an X-client installed eg via Cygwin for example
 3. Enter: export DISPLAY=:0.0
 4. Enter: ssh -Y username@remote host
 
-*To test if successful Enter:*  python3 -m tkinter
+*To install necessary packages please run the setup.py file:*
+
+    python3 setup.py install
+
+*depending on the permissions you might need to elevate using*
+ 
+sudo or another admin privileges
+
+*please make sure that you're using a version of Python with tKinter*
+
+*To test if successful Enter:*
+        
+    python3 -m tkinter
 
 This should launch a tkinter test window
 

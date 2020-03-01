@@ -1,0 +1,7 @@
+dist/
+build/
+.idea/
+OSU_Calculator.egg-info/
+.DS_Store
+
+

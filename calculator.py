@@ -9,7 +9,7 @@ from tkinter import *
 
 import tkinter.font as font  # added this
 from math import *
-# import texteditor
+import texteditor
 
 # A global constant of sorts. The number of columns in the calculator
 NUM_COLUMNS = 4
@@ -37,7 +37,7 @@ class Mathematics:
         try:
             floatValue = float(expression)
             result = log10(floatValue)
-            strVal = format("%8g"% (result))
+            strVal = format("%8g" % (result))
         except:
             result = "error"
         return strVal
@@ -47,66 +47,66 @@ class UnitConversion:
 
     # Convert from lbs to kg
     def toKg(self, expression):
-        conversionFactor= 0.453592
+        conversionFactor = 0.453592
         try:
             floatValue = float(expression)
             result = conversionFactor*floatValue
-            strVal = format("%8g"% (result))
+            strVal = format("%8g" % (result))
         except:
             result = "error"
         return strVal
 
     # Convert from kg to lbs
     def toLbs(self, expression):
-        conversionFactor= 2.20462
+        conversionFactor = 2.20462
         try:
             floatValue = float(expression)
             result = conversionFactor*floatValue
-            strVal = format("%8g"% (result))
+            strVal = format("%8g" % (result))
         except:
             result = "error"
         return strVal
 
     # Convert from from meters to feet
     def toFt(self, expression):
-        conversionFactor= 3.28084
+        conversionFactor = 3.28084
         try:
             floatValue = float(expression)
             result = conversionFactor*floatValue
-            strVal = format("%8g"% (result))
+            strVal = format("%8g" % (result))
         except:
             result = "error"
         return strVal
 
     # Convert from from feet to meters
     def toM(self, expression):
-        conversionFactor= 0.3048
+        conversionFactor = 0.3048
         try:
             floatValue = float(expression)
             result = conversionFactor*floatValue
-            strVal = format("%8g"% (result))
+            strVal = format("%8g" % (result))
         except:
             result = "error"
         return strVal
 
     # Convert from from kilometers to miles
     def toMi(self, expression):
-        conversionFactor= 0.621371
+        conversionFactor = 0.621371
         try:
             floatValue = float(expression)
             result = conversionFactor*floatValue
-            strVal = format("%8g"% (result))
+            strVal = format("%8g" % (result))
         except:
             result = "error"
         return strVal
 
     # Convert from from miles to kilometers
     def toKm(self, expression):
-        conversionFactor= 1.60934
+        conversionFactor = 1.60934
         try:
             floatValue = float(expression)
             result = conversionFactor*floatValue
-            strVal = format("%8g"% (result))
+            strVal = format("%8g" % (result))
         except:
             result = "error"
         return strVal
@@ -115,7 +115,7 @@ class UnitConversion:
     def toFdeg(self, expression):
         try:
             res = (float(expression) * 1.8) + 32
-            strVal = format("%8g"% (res))
+            strVal = format("%8g" % (res))
         except:
             res = "error"
         return strVal
@@ -124,7 +124,7 @@ class UnitConversion:
     def toCdeg(self, expression):
         try:
             res = (float(expression) - 32) * (5/9)
-            strVal = format("%8g"% (res))
+            strVal = format("%8g" % (res))
         except:
             res = "error"
         return strVal
@@ -133,7 +133,7 @@ class UnitConversion:
     def toLiter(self, expression):
         try:
             res = float(expression) * 3.78541
-            strVal = format("%8g"% (res))
+            strVal = format("%8g" % (res))
         except:
             res = "error"
         return strVal
@@ -142,7 +142,7 @@ class UnitConversion:
     def toGal(self, expression):
         try:
             res = float(expression) / 3.78541
-            strVal = format("%8g"% (res))
+            strVal = format("%8g" % (res))
         except:
             res = "error"
         return strVal
@@ -151,7 +151,7 @@ class UnitConversion:
     def toCm(self, expression):
         try:
             res = float(expression) * 2.54
-            strVal = format("%8g"% (res))
+            strVal = format("%8g" % (res))
         except:
             res = "error"
         return strVal
@@ -160,7 +160,7 @@ class UnitConversion:
     def toIn(self, expression):
         try:
             res = float(expression) / 2.54
-            strVal = format("%8g"% (res))
+            strVal = format("%8g" % (res))
         except:
             res = "error"
         return strVal
@@ -171,7 +171,6 @@ class undoRedo:
         self.undo_Stack = []
         self.redo_Stack = []
 
-
     def get_top_undo(self):
         """function to get top of undo stack"""
         if len(self.undo_Stack) > 0:
@@ -179,12 +178,12 @@ class undoRedo:
         else:
             return None
 
-    def addItemUndo(self, element_to_add, flag = True):
+    def addItemUndo(self, element_to_add, flag=True):
         """function to add new item to the undo stack"""
         self.undo_Stack.append(element_to_add)
         self.trim_stack(flag)
 
-    def addOperationUndo(self, operand1, operand2, operator, flag = True ):
+    def addOperationUndo(self, operand1, operand2, operator, flag=True):
         """function to add a complete operation to the undo stack"""
         operation = {'num1': operand1, 'num2': operand2, 'op': operator}
         self.undo_Stack[-1] = operation
@@ -223,6 +222,7 @@ class undoRedo:
 
         if clear_redo:
             self.redo_Stack.clear()
+
 
 class Calculator:
     def __init__(self, master):
@@ -322,7 +322,7 @@ class Calculator:
                command=self.showHistory, width=7, height=1).grid(
             row=1, column=3, sticky=(N, S, E, W))
 
-        #buttons for unit conversion:
+        # buttons for unit conversion:
         kg_button = "\u2b62" + " kg"
         lbs_button = "\u2b62" + " lbs"
         ft_button = "\u2b62" + " ft"
@@ -398,30 +398,30 @@ class Calculator:
             Button(self.master, text='log', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.setFlag("log"), width=7, height=1),
 
-            Button(self.master, text= kg_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+            Button(self.master, text=kg_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.unitConvert("Kg"), width=7, height=1),
-            Button(self.master, text= lbs_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+            Button(self.master, text=lbs_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.unitConvert("Lbs"), width=7, height=1),
-            Button(self.master, text= ft_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+            Button(self.master, text=ft_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.unitConvert("Ft"), width=7, height=1),
-            Button(self.master, text= m_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+            Button(self.master, text=m_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.unitConvert("M"), width=7, height=1),
-            Button(self.master, text= mi_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+            Button(self.master, text=mi_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.unitConvert("Mi"), width=7, height=1),
-            Button(self.master, text= km_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+            Button(self.master, text=km_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.unitConvert("Km"), width=7, height=1),
 
-            Button(self.master, text= cDeg_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+            Button(self.master, text=cDeg_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.unitConvert("cDeg"), width=7, height=1),
-            Button(self.master, text= fDeg_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+            Button(self.master, text=fDeg_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.unitConvert("fDeg"), width=7, height=1),
-            Button(self.master, text= liter_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+            Button(self.master, text=liter_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.unitConvert("liter"), width=7, height=1),
-            Button(self.master, text= gal_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+            Button(self.master, text=gal_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.unitConvert("gal"), width=7, height=1),
-            Button(self.master, text= cm_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+            Button(self.master, text=cm_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.unitConvert("cm"), width=7, height=1),
-            Button(self.master, text= in_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
+            Button(self.master, text=in_button, fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
                    command=lambda: self.unitConvert("in"), width=7, height=1),
 
             Button(self.master, text='+/-', fg=BTN_TXT_COLOR, bg=BTN_BG_COLOR,
@@ -489,7 +489,8 @@ class Calculator:
         # Refactoring for building operands
         is_operand_data = num.isnumeric() or num == "negative"
         is_operand_data = is_operand_data or num == "."
-        is_operand_data = is_operand_data or num == "E"  # TODO convert E button to operator and add sign button to enable #E-# functionality
+        # TODO convert E button to operator and add sign button to enable #E-# functionality
+        is_operand_data = is_operand_data or num == "E"
 
         if is_operand_data:
             if self.operator is None:
@@ -576,8 +577,10 @@ class Calculator:
                         else:
                             self.operands[idx] = "-" + self.operands[idx]
                 elif num == "E":
-                    add_E_to_operand = len(self.operands[idx]) > 0 and self.operands[idx][0].isnumeric()
-                    add_E_to_operand = add_E_to_operand or len(self.operands[idx]) > 1 and self.operands[idx][0] == "-"
+                    add_E_to_operand = len(
+                        self.operands[idx]) > 0 and self.operands[idx][0].isnumeric()
+                    add_E_to_operand = add_E_to_operand or len(
+                        self.operands[idx]) > 1 and self.operands[idx][0] == "-"
                     # add_E_to_operand = add_E_to_operand and self.e_index < 0
 
                     if add_E_to_operand:
@@ -601,7 +604,8 @@ class Calculator:
                 if self.e_operands[idx] is None:
                     self.URstacks.updateUndo(self.operands[idx])
                 else:
-                    self.URstacks.updateUndo(self.operands[idx] + "E" + self.e_operands[idx])
+                    self.URstacks.updateUndo(
+                        self.operands[idx] + "E" + self.e_operands[idx])
         else:
             self.displayError("invalid key")
 
@@ -639,7 +643,7 @@ class Calculator:
                 #total = self.my_math.basic(self.expression_field.get())
                 total = self.my_math.basic(self.expFiltered)
                 floatValue = float(total)
-                strVal = format("%8g"% (floatValue))
+                strVal = format("%8g" % (floatValue))
                 total = strVal.strip()
 
             self.equation.set(total)
@@ -657,7 +661,8 @@ class Calculator:
                 if self.e_operands[1] is not None:
                     temp_num2 += "E" + self.e_operands[1]
 
-                self.URstacks.addOperationUndo(temp_num1, temp_num2, self.operator)
+                self.URstacks.addOperationUndo(
+                    temp_num1, temp_num2, self.operator)
 
             self.previous_answer = total  # save result of operation to previous answer variable
             self.operands[0] = self.previous_answer
@@ -684,59 +689,75 @@ class Calculator:
 
         try:
             if (buttonName == "Kg"):
-                self.expression = self.my_math.basic(self.expression_field.get())
+                self.expression = self.my_math.basic(
+                    self.expression_field.get())
                 result = self.my_unitConvert.toKg(self.expression)
-                self.equation.set(result + " (kg)" )
+                self.equation.set(result + " (kg)")
+
             elif (buttonName == "Lbs"):
-                self.expression = self.my_math.basic(self.expression_field.get())
+                self.expression = self.my_math.basic(
+                    self.expression_field.get())
                 result = self.my_unitConvert.toLbs(self.expression)
                 self.equation.set(result + " (lbs)")
+
             elif (buttonName == "Ft"):
-                self.expression = self.my_math.basic(self.expression_field.get())
+                self.expression = self.my_math.basic(
+                    self.expression_field.get())
                 result = self.my_unitConvert.toFt(self.expression)
                 self.equation.set(result + " (ft)")
             elif (buttonName == "M"):
-                self.expression = self.my_math.basic(self.expression_field.get())
+                self.expression = self.my_math.basic(
+                    self.expression_field.get())
                 result = self.my_unitConvert.toM(self.expression)
-                self.equation.set(result  + " (m)" )
+                self.equation.set(result + " (m)")
             elif (buttonName == "Mi"):
-                self.expression = self.my_math.basic(self.expression_field.get())
+                self.expression = self.my_math.basic(
+                    self.expression_field.get())
                 result = self.my_unitConvert.toMi(self.expression)
-                self.equation.set(result  + " (mi)")
+                self.equation.set(result + " (mi)")
             elif (buttonName == "Km"):
-                self.expression = self.my_math.basic(self.expression_field.get())
+                self.expression = self.my_math.basic(
+                    self.expression_field.get())
                 result = self.my_unitConvert.toKm(self.expression)
                 self.equation.set(result + " (km)")
 
             elif (buttonName == "fDeg"):
-                self.expression = self.my_math.basic(self.expression_field.get())
+                self.expression = self.my_math.basic(
+                    self.expression_field.get())
                 result = self.my_unitConvert.toFdeg(self.expression)
                 self.equation.set(result + " (\u2b62 \u00B0" + "F)")
             elif (buttonName == "cDeg"):
-                self.expression = self.my_math.basic(self.expression_field.get())
+                self.expression = self.my_math.basic(
+                    self.expression_field.get())
                 result = self.my_unitConvert.toCdeg(self.expression)
                 self.equation.set(result + " (\u2b62 \u00B0" + "C)")
 
             elif (buttonName == "liter"):
-                self.expression = self.my_math.basic(self.expression_field.get())
+                self.expression = self.my_math.basic(
+                    self.expression_field.get())
                 result = self.my_unitConvert.toLiter(self.expression)
                 self.equation.set(result + " (L)")
             elif (buttonName == "gal"):
-                self.expression = self.my_math.basic(self.expression_field.get())
+                self.expression = self.my_math.basic(
+                    self.expression_field.get())
                 result = self.my_unitConvert.toGal(self.expression)
                 self.equation.set(result + " (gal)")
 
             elif (buttonName == "cm"):
-                self.expression = self.my_math.basic(self.expression_field.get())
+                self.expression = self.my_math.basic(
+                    self.expression_field.get())
                 result = self.my_unitConvert.toCm(self.expression)
                 self.equation.set(result + " (cm)")
             elif (buttonName == "in"):
-                self.expression = self.my_math.basic(self.expression_field.get())
+                self.expression = self.my_math.basic(
+                    self.expression_field.get())
                 result = self.my_unitConvert.toIn(self.expression)
                 self.equation.set(result + " (in)")
 
-
-            #self.equation.set(result)
+            # self.equation.set(result)
+            self.expFiltered = self.expression
+            self.saveHistory()
+            self.calculationLog()
 
             self.previous_answer = result  # save result of operation to previous answer variable
             self.operands[0] = self.previous_answer
@@ -843,6 +864,7 @@ class Calculator:
     def useLog(self):
         self.clear()
         eq = self.variable.get().split('=')[1]
+        eq = eq.split('(')[0]
         self.expression = eq
         self.equation.set(eq)
         self.equalpress()
@@ -918,6 +940,7 @@ class Calculator:
         else:
             self.operands[idx] = raw_data
             self.e_operands[idx] = None
+
 
 # Driver code
 if __name__ == "__main__":
